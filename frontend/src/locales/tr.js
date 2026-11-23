@@ -5910,4 +5910,8 @@ export default {
   "Badges": "Rozetler",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{1}. seviyeye {0} XP",
+  "Performance": "Performans",
+  "Where your XP comes from": "XP’lerin nereden geliyor",
+  "Next badge": "Sıradaki rozet",
+  "Level up! You are now level {0}.": "Seviye atladın! Artık {0}. seviyedesin.",
 }

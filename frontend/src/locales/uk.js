@@ -5907,4 +5907,8 @@ export default {
   "Badges": "Значки",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP до рівня {1}",
+  "Performance": "Результати",
+  "Where your XP comes from": "Звідки береться досвід",
+  "Next badge": "Наступний значок",
+  "Level up! You are now level {0}.": "Новий рівень! Тепер у тебе рівень {0}.",
 }

@@ -5913,4 +5913,8 @@ export default {
   "Badges": "Jelvények",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP a(z) {1}. szintig",
+  "Performance": "Teljesítmény",
+  "Where your XP comes from": "Honnan jön az XP-d",
+  "Next badge": "Következő jelvény",
+  "Level up! You are now level {0}.": "Szintlépés! Mostantól a(z) {0}. szinten vagy.",
 }

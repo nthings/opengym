@@ -5876,4 +5876,8 @@ export default {
   "Badges": "نشان‌ها",
   "{0} XP": "{0} امتیاز تجربه",
   "{0} XP to level {1}": "{0} امتیاز تجربه تا سطح {1}",
+  "Performance": "عملکرد",
+  "Where your XP comes from": "امتیاز تجربه‌ات از کجا می‌آید",
+  "Next badge": "نشان بعدی",
+  "Level up! You are now level {0}.": "ارتقا! حالا در سطح {0} هستی.",
 }

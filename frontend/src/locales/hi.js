@@ -5910,4 +5910,8 @@ export default {
   "Badges": "बैज",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "लेवल {1} तक {0} XP",
+  "Performance": "प्रदर्शन",
+  "Where your XP comes from": "आपके XP कहाँ से आते हैं",
+  "Next badge": "अगला बैज",
+  "Level up! You are now level {0}.": "लेवल अप! अब आप लेवल {0} पर हैं।",
 }

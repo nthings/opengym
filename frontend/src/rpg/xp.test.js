@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ATTRIBUTES, STRETCH_CATS, levelOf, rpgState, titleFor, xpForLevel } from './xp.js'
+import { ATTRIBUTES, STRETCH_CATS, attrLevelOf, levelOf, rpgState, titleFor, xpForLevel } from './xp.js'
 
 // A workout in the real shape (lib/fixtures/anim-safety-state.json): weight × reps, `done` when it
 // was ticked off. 0025 is a barbell bench press, 1890 an achilles stretch.
@@ -157,5 +157,47 @@ describe('rpgState', () => {
     const w = rpgState({ workouts: weekly.map(d => workout(d, [{ id: '0025', sets: sets([0, 10]) }])) }, '2026-11-04')
     expect(w.badges.find(b => b.id === 'streak-4').earned).toBe(true)
     expect(w.badges.find(b => b.id === 'streak-12').earned).toBe(false)
+  })
+
+  it('attributes have an absolute level, so two people can be compared: 10*L*(L-1) sets for level L', () => {
+    expect(attrLevelOf(0)).toEqual({ level: 1, into: 0, span: 20 })
+    expect(attrLevelOf(19).level).toBe(1)
+    expect(attrLevelOf(20)).toEqual({ level: 2, into: 0, span: 40 })
+    expect(attrLevelOf(71)).toEqual({ level: 3, into: 11, span: 60 })
+    const S = { workouts: [workout('2026-11-02', [{ id: '0025', sets: sets([60, 8], [60, 8], [60, 8]) }])] }
+    const chest = rpgState(S).attributes.find(a => a.id === 'chest')
+    expect(chest).toMatchObject({ level: 1, span: 20 })
+    expect(chest.into).toBe(chest.value)
+  })
+
+  it('says where the XP comes from: consistency, performance and streak add up to the total', () => {
+    const S = { workouts: [
+      workout('2026-11-02', [{ id: '0025', sets: sets([100, 10]) }], { prs: ['0025'] }),
+      workout('2026-11-09', [{ id: '1890', sets: sets([0, 60]) }]),
+    ] }
+    const s = rpgState(S, '2026-11-10')
+    expect(s.sources).toEqual({ consistency: 100, performance: (10 + 25) + 15, streak: 2 * 25 })
+    expect(s.sources.consistency + s.sources.performance + s.sources.streak).toBe(s.xp)
+  })
+
+  it('XP gained today and in the last 7 days (today included)', () => {
+    const S = { workouts: [
+      workout('2026-11-03', [{ id: '0025', sets: sets([100, 10]) }]), // 60
+      workout('2026-11-09', [{ id: '0025', sets: sets([100, 10]) }]), // 60
+      workout('2026-11-10', [{ id: '0025', sets: sets([200, 10]) }]), // 70
+    ] }
+    const s = rpgState(S, '2026-11-10')
+    expect(s.recent).toEqual({ today: 70, week: 60 + 70 })
+    expect(rpgState({}, '2026-11-10').recent).toEqual({ today: 0, week: 0 })
+  })
+
+  it('badges carry their progress, and the next one to chase is named', () => {
+    const S = { workouts: Array.from({ length: 5 }, (_, i) => workout(`2026-01-0${i + 1}`, [{ id: '0025', sets: sets([0, 10]) }])) }
+    const s = rpgState(S, '2026-01-20')
+    const b = s.badges.find(x => x.id === 'workouts-10')
+    expect(b).toMatchObject({ have: 5, need: 10, earned: false })
+    expect(s.nextBadge).toMatchObject({ id: 'workouts-10', have: 5, need: 10 })
+    const all = rpgState({ workouts: [] })
+    expect(all.nextBadge.id).toBe('first-workout')
   })
 })

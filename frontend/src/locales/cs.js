@@ -5876,4 +5876,8 @@ export default {
   "Badges": "Odznaky",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP do úrovně {1}",
+  "Performance": "Výkon",
+  "Where your XP comes from": "Odkud berete XP",
+  "Next badge": "Další odznak",
+  "Level up! You are now level {0}.": "Nová úroveň! Jste teď na úrovni {0}.",
 }

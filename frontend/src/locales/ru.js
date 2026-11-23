@@ -5914,4 +5914,8 @@ export default {
   "Badges": "Значки",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP до уровня {1}",
+  "Performance": "Результаты",
+  "Where your XP comes from": "Откуда берётся опыт",
+  "Next badge": "Следующий значок",
+  "Level up! You are now level {0}.": "Новый уровень! Теперь у тебя уровень {0}.",
 }

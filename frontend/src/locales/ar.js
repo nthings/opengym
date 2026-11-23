@@ -5965,4 +5965,8 @@ export default {
   "Badges": "الشارات",
   "{0} XP": "{0} نقطة خبرة",
   "{0} XP to level {1}": "{0} نقطة خبرة للمستوى {1}",
+  "Performance": "الأداء",
+  "Where your XP comes from": "من أين تأتي نقاط خبرتك",
+  "Next badge": "الشارة التالية",
+  "Level up! You are now level {0}.": "ارتقيت! أنت الآن في المستوى {0}.",
 }

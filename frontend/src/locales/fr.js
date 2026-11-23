@@ -5910,4 +5910,8 @@ export default {
   "Badges": "Badges",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP avant le niveau {1}",
+  "Performance": "Performance",
+  "Where your XP comes from": "D’où viennent tes XP",
+  "Next badge": "Prochain badge",
+  "Level up! You are now level {0}.": "Niveau supérieur ! Tu es maintenant niveau {0}.",
 }

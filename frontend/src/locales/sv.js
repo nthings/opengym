@@ -5957,4 +5957,8 @@ export default {
   "Badges": "Märken",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP till nivå {1}",
+  "Performance": "Prestation",
+  "Where your XP comes from": "Varifrån din XP kommer",
+  "Next badge": "Nästa märke",
+  "Level up! You are now level {0}.": "Nivå upp! Du är nu på nivå {0}.",
 }

@@ -5906,4 +5906,8 @@ export default {
   "Badges": "Ženkliukai",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP iki {1} lygio",
+  "Performance": "Rezultatai",
+  "Where your XP comes from": "Iš kur tavo XP",
+  "Next badge": "Kitas ženkliukas",
+  "Level up! You are now level {0}.": "Naujas lygis! Dabar esi {0} lygio.",
 }

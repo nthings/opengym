@@ -59,14 +59,27 @@ const dayOf = w => {
   return Number.isFinite(at) ? isoOf(new Date(at)) : null
 }
 
+// `of` is the stat a badge counts, `need` how much of it earns it.
 const BADGES = [
-  { id: 'first-workout', title: 'First workout', test: x => x.workouts >= 1 },
-  { id: 'workouts-10', title: '10 workouts', test: x => x.workouts >= 10 },
-  { id: 'workouts-50', title: '50 workouts', test: x => x.workouts >= 50 },
-  { id: 'workouts-100', title: '100 workouts', test: x => x.workouts >= 100 },
-  { id: 'streak-4', title: '4 week streak', test: x => x.bestStreak >= 4 },
-  { id: 'streak-12', title: '12 week streak', test: x => x.bestStreak >= 12 },
+  { id: 'first-workout', title: 'First workout', of: 'workouts', need: 1 },
+  { id: 'workouts-10', title: '10 workouts', of: 'workouts', need: 10 },
+  { id: 'workouts-50', title: '50 workouts', of: 'workouts', need: 50 },
+  { id: 'workouts-100', title: '100 workouts', of: 'workouts', need: 100 },
+  { id: 'streak-4', title: '4 week streak', of: 'bestStreak', need: 4 },
+  { id: 'streak-12', title: '12 week streak', of: 'bestStreak', need: 12 },
 ]
+
+/**
+ * An attribute's level from its effective sets: level L needs 10*L*(L-1) of them (20 for level 2,
+ * 60 for 3). The same for everyone, so two people's Legs can be compared, unlike a bar drawn
+ * against your own strongest attribute. { level, into, span }.
+ */
+export function attrLevelOf(value) {
+  const v = Math.max(0, Number(value) || 0)
+  let level = 1
+  while (10 * (level + 1) * level <= v) level++
+  return { level, into: v - 10 * level * (level - 1), span: 20 * level }
+}
 
 /**
  * The whole sheet as of `today`: { xp, level, into, span, toNext, title, attributes, badges, stats }.
@@ -74,7 +87,7 @@ const BADGES = [
  */
 export function rpgState(S, today = todayISO()) {
   const workouts = (Array.isArray(S?.workouts) ? S.workouts : []).filter(w => w && typeof w === 'object')
-  const days = new Map() // day -> { volume, prs, stretch }
+  const days = new Map() // day -> { volume, prs, stretch, worked }
   for (const w of workouts) {
     const day = dayOf(w)
     if (!day) continue
@@ -93,30 +106,43 @@ export function rpgState(S, today = todayISO()) {
     days.set(day, d)
   }
 
-  let xp = 0
+  // The last 7 days, today included (ISO dates compare as text).
+  const weekFrom = isoOf(new Date(new Date(today + 'T12:00:00').getTime() - 6 * 86400000))
+  let consistency = 0
+  let performanceXp = 0
   let volume = 0
   let prs = 0
+  const recent = { today: 0, week: 0 }
   for (const [day, d] of days) {
     if (!d.worked) { days.delete(day); continue } // nothing ticked off: showing up needs a set
-    const performance = Math.floor(d.volume / KG_PER_XP) + d.prs * PR_XP + (d.stretch ? STRETCH_XP : 0)
-    xp += DAY_XP + Math.min(DAY_PERFORMANCE_CAP, performance)
+    const performance = Math.min(DAY_PERFORMANCE_CAP, Math.floor(d.volume / KG_PER_XP) + d.prs * PR_XP + (d.stretch ? STRETCH_XP : 0))
+    consistency += DAY_XP
+    performanceXp += performance
     volume += d.volume
     prs += d.prs
+    if (day === today) recent.today = DAY_XP + performance
+    if (day >= weekFrom && day <= today) recent.week += DAY_XP + performance
   }
   const bestStreak = workouts.length ? streakInfo(S, today).best : 0
-  xp += bestStreak * STREAK_WEEK_XP
+  const sources = { consistency, performance: performanceXp, streak: bestStreak * STREAK_WEEK_XP }
+  const xp = sources.consistency + sources.performance + sources.streak
 
   const load = loadOfWorkouts(workouts)
-  const attributes = ATTRIBUTES.map(a => ({
-    id: a.id, title: a.title, value: Math.round(a.muscles.reduce((n, m) => n + (load[m] || 0), 0)),
-  }))
+  const attributes = ATTRIBUTES.map(a => {
+    const value = Math.round(a.muscles.reduce((n, m) => n + (load[m] || 0), 0))
+    return { id: a.id, title: a.title, value, ...attrLevelOf(value) }
+  })
   const stats = { workouts: workouts.length, days: days.size, volume, prs, bestStreak }
   const lv = levelOf(xp)
+  const badges = BADGES.map(b => ({ id: b.id, title: b.title, have: stats[b.of], need: b.need, earned: stats[b.of] >= b.need }))
   return {
     ...lv,
     title: titleFor(lv.level),
     attributes,
-    badges: BADGES.map(b => ({ id: b.id, title: b.title, earned: b.test(stats) })),
+    badges,
+    nextBadge: badges.find(b => !b.earned) || null,
+    sources,
+    recent,
     stats,
   }
 }

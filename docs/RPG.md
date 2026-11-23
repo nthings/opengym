@@ -25,7 +25,8 @@ your best weekly streak** (`lib/streak.js`).
 Level N needs `50 * N * (N - 1)` XP in total: 100 for level 2, 300 for 3, 600 for 4.
 Titles: Novice, Apprentice (5), Warrior (10), Champion (20), Legend (35).
 Attributes (Legs, Back, Chest, Shoulders, Arms, Core) are the effective sets per muscle group from
-the muscle map. Badges: first workout, 10/50/100 workouts, 4 and 12 week streaks.
+the muscle map, each with its own level on one absolute scale (level L needs 10 x L x (L-1) sets),
+so two people's attributes can be compared. Badges: first workout, 10/50/100 workouts, 4 and 12 week streaks.
 
 ## Where it touches the original code
 
@@ -40,11 +41,16 @@ grep -rn "rpg fork hook" frontend/src
 | `lib/modules.js` | the `rpg` entry, the `all` preset without it, `isOn` returning false for it |
 | `lib/modules-copy.js` | its title and description |
 | `App.jsx` | lazy import and the `/rpg` route |
-| `components/TabBar.jsx` | the RPG tab, shown only with the module on |
-| `locales/*.js` | 12 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 2 overrides) |
+| `components/TabBar.jsx` | the RPG tab, and the call to `useLevelUp` (the "Level up!" toast, a no-op with the module off) |
+| `locales/*.js` | 16 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 2 overrides) |
 | tests | `components/TabBar.test.jsx` (RPG tab cases), `modules.test.js`, `views/Modules.test.jsx` (RPG off by default), `lib/pt-br-locale.test.js` (inheritance fingerprint) |
 
 If upstream adds a locale key at the end of a pack, the conflict is just two appended blocks: keep both.
+
+The sheet also shows XP gained today and in the last 7 days, where the XP comes from
+(consistency, performance, streak) and the next badge with its progress. After a workout that
+raises the level, a toast says so. The only thing remembered is the level last seen, per device and
+profile, in `localStorage` (`opengym-rpg-level:<id>`), so a level-up is announced once.
 
 ## Known limits
 

@@ -5876,4 +5876,8 @@ export default {
   "Badges": "Huy hiệu",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "Còn {0} XP để lên cấp {1}",
+  "Performance": "Hiệu suất",
+  "Where your XP comes from": "XP của bạn đến từ đâu",
+  "Next badge": "Huy hiệu tiếp theo",
+  "Level up! You are now level {0}.": "Lên cấp! Bây giờ bạn đang ở cấp {0}.",
 };

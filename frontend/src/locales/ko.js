@@ -5910,4 +5910,8 @@ export default {
   "Badges": "배지",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{1}레벨까지 {0} XP",
+  "Performance": "퍼포먼스",
+  "Where your XP comes from": "XP는 어디서 오나요",
+  "Next badge": "다음 배지",
+  "Level up! You are now level {0}.": "레벨 업! 이제 {0}레벨입니다.",
 }

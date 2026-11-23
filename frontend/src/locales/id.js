@@ -5875,4 +5875,8 @@ export default {
   "Badges": "Lencana",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP lagi ke level {1}",
+  "Performance": "Performa",
+  "Where your XP comes from": "Dari mana XP-mu berasal",
+  "Next badge": "Lencana berikutnya",
+  "Level up! You are now level {0}.": "Naik level! Sekarang kamu level {0}.",
 };

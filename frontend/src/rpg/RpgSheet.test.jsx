@@ -38,7 +38,7 @@ describe('RpgSheet', () => {
     expect(text()).toContain('Novice')
     expect(text()).toContain('145 XP')
     expect(text()).toContain('155 XP to level 3')
-    for (const a of ['Legs', 'Back', 'Chest', 'Shoulders', 'Arms', 'Core']) expect(text()).toContain(a)
+    for (const a of ['Legs', 'Back muscles', 'Chest', 'Shoulders', 'Arms', 'Core']) expect(text()).toContain(a)
   })
 
   it('a profile with no workouts is level 1 and does not crash', () => {
@@ -53,5 +53,34 @@ describe('RpgSheet', () => {
     const ten = [...container.querySelectorAll('.rpg-badge')].find(b => b.textContent.includes('10 workouts'))
     expect(first.getAttribute('data-earned')).toBe('true')
     expect(ten.getAttribute('data-earned')).toBe('false')
+  })
+
+  it('the attribute bars are levels on one absolute scale, not relative to your best one', () => {
+    mount({ workouts: [{ id: 'a', d: '2026-11-02', entries: [{ id: '0025', sets: [{ w: 60, r: 8, done: true }] }] }] })
+    const rows = [...container.querySelectorAll('.rpg-attr')]
+    expect(rows).toHaveLength(6)
+    const chest = rows.find(r => r.textContent.includes('Chest'))
+    expect(chest.textContent).toContain('Level 1')
+    // A single set is far from level 2 (20 sets): the bar is nearly empty, not full.
+    expect(Number(chest.querySelector('[data-pct]').getAttribute('data-pct'))).toBeLessThan(20)
+  })
+
+  it('shows XP gained today and this week, and where the XP comes from', () => {
+    const d = new Date(); const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
+    mount({ workouts: [{ id: 'a', d: iso, entries: [{ id: '0025', sets: [{ w: 100, r: 10, done: true }] }] }] })
+    expect(container.querySelector('.rpg-today').textContent).toContain('+60 XP')
+    expect(container.querySelector('.rpg-week').textContent).toContain('+60 XP')
+    const src = container.querySelector('.rpg-sources').textContent
+    expect(src).toContain('Consistency')
+    expect(src).toContain('Performance')
+    expect(src).toContain('Streak')
+    expect(src).toContain('50 XP')
+  })
+
+  it('names the next badge with its progress', () => {
+    mount({ workouts: [{ id: 'a', d: '2026-11-02', entries: [{ id: '0025', sets: [{ w: 10, r: 10, done: true }] }] }] })
+    const next = container.querySelector('.rpg-next').textContent
+    expect(next).toContain('10 workouts')
+    expect(next).toContain('1 / 10')
   })
 })

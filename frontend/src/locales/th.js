@@ -5921,4 +5921,8 @@ export default {
   "Badges": "ตราสัญลักษณ์",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "อีก {0} XP ถึงเลเวล {1}",
+  "Performance": "ผลงาน",
+  "Where your XP comes from": "XP ของคุณมาจากไหน",
+  "Next badge": "ตราสัญลักษณ์ถัดไป",
+  "Level up! You are now level {0}.": "เลเวลอัป! ตอนนี้คุณอยู่เลเวล {0}",
 }

@@ -5910,4 +5910,8 @@ export default {
   "Badges": "徽章",
   "{0} XP": "{0} 经验值",
   "{0} XP to level {1}": "距 {1} 级还差 {0} 经验值",
+  "Performance": "表现",
+  "Where your XP comes from": "你的经验值从哪里来",
+  "Next badge": "下一个徽章",
+  "Level up! You are now level {0}.": "升级了！你现在是 {0} 级。",
 }

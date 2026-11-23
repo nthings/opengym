@@ -10,6 +10,7 @@ import Elapsed from './Elapsed.jsx'
 import { useConnectionTrouble } from './SyncBanner.jsx'
 import { retapTab } from '../lib/scroll-top.js'
 import { isOn } from '../lib/modules.js'
+import { useLevelUp } from '../rpg/levelup.js' // rpg fork hook
 
 // Module scope, not TabBar's render body. Declared inside it, `Tab` was a new function on every
 // render, so React saw a different component type each time and threw the button away and built a
@@ -36,6 +37,7 @@ export default function TabBar({ onStart, onPick }) {
   // With the connection banner switched off, a sync problem shows as a dot on Home, the tab
   // Settings lives under (#369, #330).
   const trouble = useConnectionTrouble()
+  useLevelUp(S, user?.id) // rpg fork hook: "Level up!" toast, a no-op unless the module is on
   if (!user && !isGuest) return null
   const cur = loc.pathname.split('/')[1] || 'home'
   // A screen without a tab of its own lights the tab it is opened from (Muscles from both).
