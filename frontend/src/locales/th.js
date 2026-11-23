@@ -5921,4 +5921,5 @@ export default {
   "Badges": "ตราสัญลักษณ์",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "อีก {0} XP ถึงเลเวล {1}",
+  "Level, XP, attributes and badges.": "เลเวล XP ค่าสถานะ และตราสัญลักษณ์",
 }

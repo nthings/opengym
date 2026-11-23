@@ -5910,4 +5910,5 @@ export default {
   "Badges": "徽章",
   "{0} XP": "{0} 经验值",
   "{0} XP to level {1}": "距 {1} 级还差 {0} 经验值",
+  "Level, XP, attributes and badges.": "等级、经验值、属性和徽章。",
 }

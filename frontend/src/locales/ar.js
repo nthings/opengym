@@ -5965,4 +5965,5 @@ export default {
   "Badges": "الشارات",
   "{0} XP": "{0} نقطة خبرة",
   "{0} XP to level {1}": "{0} نقطة خبرة للمستوى {1}",
+  "Level, XP, attributes and badges.": "المستوى والخبرة والسمات والشارات.",
 }

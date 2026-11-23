@@ -56,6 +56,14 @@ describe('Stats follows the modules', () => {
     expect(links()).toEqual(['Structural balance', 'Journal', 'Tools'])
   })
 
+  it('the opt-in RPG module adds its link next to Journal and Tools, and only when on', () => {
+    mount(undefined)
+    expect(links()).not.toContain('RPG')
+    act(() => root.unmount()); host.remove()
+    mount({ rpg: true })
+    expect(links()).toEqual(expect.arrayContaining(['Journal', 'RPG', 'Tools']))
+  })
+
   it('Effort off takes its part and the effort chart away; on brings them back', () => {
     mount({ effort: false })
     expect(parts()).not.toContain('Effort')

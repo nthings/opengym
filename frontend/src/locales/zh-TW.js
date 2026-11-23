@@ -5903,4 +5903,5 @@ export default {
   "Badges": "徽章",
   "{0} XP": "{0} 經驗值",
   "{0} XP to level {1}": "距離 {1} 級還差 {0} 經驗值",
+  "Level, XP, attributes and badges.": "等級、經驗值、屬性與徽章。",
 }

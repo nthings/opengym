@@ -5875,4 +5875,5 @@ export default {
   "Badges": "Lencana",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP lagi ke level {1}",
+  "Level, XP, attributes and badges.": "Level, XP, atribut, dan lencana.",
 };

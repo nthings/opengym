@@ -5914,4 +5914,5 @@ export default {
   "Badges": "Значки",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP до уровня {1}",
+  "Level, XP, attributes and badges.": "Уровень, опыт, характеристики и значки.",
 }

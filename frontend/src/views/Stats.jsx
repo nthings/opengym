@@ -898,6 +898,8 @@ export default function Stats() {
     workouts.length > 0 && <Row key="b" title={t('Structural balance')} subtitle={t('See which lift is holding back the rest.')} accessory="chevron" className="stats-link" onClick={() => nav('/structural-balance')} />,
     // Every note in one feed (views/Journal.jsx): workouts, sets, exercises, check-ins, days off.
     <Row key="j" title={t('Journal')} subtitle={t('Every note you wrote, in one place.')} accessory="chevron" className="stats-link" onClick={() => nav('/journal')} />,
+    // rpg fork hook: the character sheet (rpg/RpgSheet.jsx), only with the opt-in module on
+    on('rpg') && <Row key="rpg" title={t('RPG')} subtitle={t('Level, XP, attributes and badges.')} accessory="chevron" className="stats-link" onClick={() => nav('/rpg')} />,
     <Row key="t" title={t('Tools')} subtitle={t('1RM table, RPE load, DOTS, BMI, body fat, pace.')} accessory="chevron" className="stats-link" onClick={() => nav('/tools')} />,
     storyMonth && <Row key="month" title={t('Your month')} value={storyMonth === todayISO().slice(0, 7) ? t('So far') : monthLabel(storyMonth)} accessory="chevron"
       className="stats-link month-story" onClick={() => openMonthStory(storyMonth)} />,
