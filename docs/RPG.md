@@ -71,3 +71,55 @@ Actions → APK → Run workflow, then download the `opengym-rpg-sideload-debug-
   conflict with every upstream release.
 - A signed release APK that updates the real app in place needs your own signing key
   (`scripts/android/build-release.sh`); not set up here.
+
+## Trying the fork next to your real instance
+
+Run the fork as a second stack, with its own data folder, network and port, so your real openGym is
+never touched. `scripts/fork/compose.rpg-test.yaml` is the compose file used for this (copy it to
+the stack folder as `compose.yaml`, e.g. `/srv/stacks/opengym-rpg/`, next to a `.env`), and
+`scripts/fork/deploy.sh` rebuilds and restarts it from this checkout.
+
+`.env` for a LAN test over http (passkeys need https, so password login is on):
+
+```
+RP_ID=<server ip>
+ORIGIN=http://<server ip>:8092
+WEB_PORT=8092
+PASSWORD_LOGIN=1
+FIRST_USER_ADMIN=1
+```
+
+If Docker says `all predefined address pools have been fully subnetted`, keep the fixed `ipam`
+subnet in the compose file and pick one that is free on your host (`ip route`).
+
+### Bringing your real data over
+
+A new stack starts empty. Two ways to get your history into it:
+
+1. **From the app (safest).** In the real instance: Settings, export a backup. In the test one:
+   create a user and import it. Nothing on the real instance is touched.
+2. **Copy the data folder.** The files are usually owned by root, so this needs `sudo`. Stop only
+   the test stack first, and keep a backup of its folder:
+
+   ```bash
+   cd /srv/stacks/opengym-rpg && docker compose down
+   sudo cp -a data data.bak
+   sudo cp -a /srv/stacks/opengym/data/db.json data/
+   sudo cp -a /srv/stacks/opengym/data/state-*.json data/
+   [ -d /srv/stacks/opengym/data/uploads ] && sudo cp -a /srv/stacks/opengym/data/uploads data/
+   docker compose up -d
+   ```
+
+   Left out on purpose: `coach.json` and `coach/` (the test stack would talk to your AI provider
+   and run scheduled reviews as well), `vapid.json` (push keys; the test stack keeps its own, so it
+   does not send duplicate notifications) and `audit.log`.
+
+   Sign in with your password. Passkeys will not work: they are bound to the real domain
+   (`RP_ID`). If sign-in fails, the session key may be needed too:
+   `sudo cp -a /srv/stacks/opengym/data/secret data/ && docker compose restart api`.
+
+   It is a copy of one moment: later workouts in the real instance do not appear in the test one
+   until you repeat the copy. To undo, `docker compose down`, `sudo rm -rf data && sudo mv data.bak data`,
+   `docker compose up -d`.
+
+Then switch the module on in the test instance: Settings, Modules, RPG.
