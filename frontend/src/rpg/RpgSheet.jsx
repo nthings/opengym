@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { t, tn } from '../lib/i18n.js'
 import { todayISO } from '../lib/format.js'
 import Icon from '../components/Icon.jsx'
-import { Section } from '../components/ui.jsx'
+import { Section, Row } from '../components/ui.jsx'
 import { rpgState } from './xp.js'
 import { titleCopy, attributeCopy, badgeCopy, sourceCopy } from './copy.js'
 
@@ -18,6 +19,7 @@ const bar = (pct, tint, data) => (
 )
 
 export default function RpgSheet() {
+  const nav = useNavigate()
   const S = useStore(s => s.S)
   const today = todayISO()
   // Same inputs the streak card on Home reads (views/Home.jsx), plus the workouts themselves.
@@ -61,13 +63,11 @@ export default function RpgSheet() {
       </div>
     </Section>
 
-    <Section title={t('Badges')} footer={sheet.nextBadge ? <span className="rpg-next">{t('Next badge')}: {badges[sheet.nextBadge.id]} ({sheet.nextBadge.have} / {sheet.nextBadge.need})</span> : null}>
-      <div className="card" style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-        {sheet.badges.map(b => <span key={b.id} className="chip rpg-badge" data-earned={b.earned ? 'true' : 'false'}
-          style={{ opacity: b.earned ? 1 : 0.4 }}>
-          <Icon name={b.earned ? 'medal' : 'lock'} />{badges[b.id]}
-        </span>)}
-      </div>
+    <Section>
+      <Row className="rpg-badges-link" icon="medal" iconTint="var(--yellow)" title={t('Badges')} accessory="chevron"
+        value={sheet.badges.filter(b => b.earned).length + ' / ' + sheet.badges.length}
+        subtitle={sheet.nextBadge ? t('Next badge') + ': ' + badges[sheet.nextBadge.id] + ' (' + sheet.nextBadge.have + ' / ' + sheet.nextBadge.need + ')' : null}
+        onClick={() => nav('/rpg/badges')} />
     </Section>
   </div>
 }

@@ -117,6 +117,7 @@ const Muscles = lazyView(() => import('./views/Muscles.jsx'))
 // The community library of the server (views/Community.jsx): only with LIBRARY=on and the module on.
 const Community = lazyView(() => import('./views/Community.jsx'))
 const RpgSheet = lazyView(() => import('./rpg/RpgSheet.jsx')) // rpg fork hook
+const RpgBadges = lazyView(() => import('./rpg/RpgBadges.jsx')) // rpg fork hook
 const SettingsRoute = lazyView(() => import('./views/Settings.jsx').then(m => ({ default: m.SettingsRoute })))
 // The app tour's overlay (components/Tour.jsx): fetched when it opens, never before.
 const loadTour = () => import('./components/Tour.jsx')
@@ -412,6 +413,7 @@ function Shell() {
       <Route path="/muscles" element={<Muscles />} />
       {isOn(S, 'community') && <Route path="/community" element={<Community />} />}
       {isOn(S, 'rpg') && <Route path="/rpg" element={<RpgSheet />} />}{/* rpg fork hook */}
+      {isOn(S, 'rpg') && <Route path="/rpg/badges" element={<RpgBadges />} />}{/* rpg fork hook */}
       <Route path="/structural-balance" element={<StructuralBalance />} />
       <Route path="/tools" element={<Tools />} />
       <Route path="/journal" element={<Journal />} />

@@ -47,12 +47,12 @@ describe('RpgSheet', () => {
     expect(text()).toContain('100 XP to level 2')
   })
 
-  it('earned badges are marked, the rest are shown as locked', () => {
+  it('badges live on their own screen: the sheet only links to it, with the count and the next one', () => {
     mount({ workouts: [{ id: 'a', d: '2026-11-02', entries: [{ id: '0025', sets: [{ w: 10, r: 10, done: true }] }] }] })
-    const first = [...container.querySelectorAll('.rpg-badge')].find(b => b.textContent.includes('First workout'))
-    const ten = [...container.querySelectorAll('.rpg-badge')].find(b => b.textContent.includes('10 workouts'))
-    expect(first.getAttribute('data-earned')).toBe('true')
-    expect(ten.getAttribute('data-earned')).toBe('false')
+    expect(container.querySelector('.rpg-badge')).toBeFalsy()
+    const link = container.querySelector('.rpg-badges-link')
+    expect(link.textContent).toContain('1 / 6')
+    expect(link.textContent).toContain('10 workouts')
   })
 
   it('the attribute bars are levels on one absolute scale, not relative to your best one', () => {
@@ -79,7 +79,7 @@ describe('RpgSheet', () => {
 
   it('names the next badge with its progress', () => {
     mount({ workouts: [{ id: 'a', d: '2026-11-02', entries: [{ id: '0025', sets: [{ w: 10, r: 10, done: true }] }] }] })
-    const next = container.querySelector('.rpg-next').textContent
+    const next = container.querySelector('.rpg-badges-link').textContent
     expect(next).toContain('10 workouts')
     expect(next).toContain('1 / 10')
   })

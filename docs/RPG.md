@@ -40,7 +40,7 @@ grep -rn "rpg fork hook" frontend/src
 |---|---|
 | `lib/modules.js` | the `rpg` entry, the `all` preset without it, `isOn` returning false for it |
 | `lib/modules-copy.js` | its title and description |
-| `App.jsx` | lazy import and the `/rpg` route |
+| `App.jsx` | lazy imports and the `/rpg` and `/rpg/badges` routes |
 | `components/TabBar.jsx` | the RPG tab, and the call to `useLevelUp` (the "Level up!" toast, a no-op with the module off) |
 | `locales/*.js` | 16 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 2 overrides) |
 | tests | `components/TabBar.test.jsx` (RPG tab cases), `modules.test.js`, `views/Modules.test.jsx` (RPG off by default), `lib/pt-br-locale.test.js` (inheritance fingerprint) |
@@ -48,7 +48,7 @@ grep -rn "rpg fork hook" frontend/src
 If upstream adds a locale key at the end of a pack, the conflict is just two appended blocks: keep both.
 
 The sheet also shows XP gained today and in the last 7 days, where the XP comes from
-(consistency, performance, streak) and the next badge with its progress. After a workout that
+(consistency, performance, streak) and a link to the badges screen (`/rpg/badges`: every badge as a row, earned ones checked, locked ones with their progress). After a workout that
 raises the level, a toast says so. The only thing remembered is the level last seen, per device and
 profile, in `localStorage` (`opengym-rpg-level:<id>`), so a level-up is announced once.
 
