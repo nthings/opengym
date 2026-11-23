@@ -49,3 +49,17 @@ If upstream adds a locale key at the end of a pack, the conflict is just two app
 
 Competing with friends (server to server, signed hash-chained workout summaries, each server
 recomputing the XP) is phase 2 and is not part of this module yet.
+
+## Android APK
+
+The phone apps load the same React bundle, so the RPG screen reaches them by rebuilding the APK.
+The `APK` workflow (`.github/workflows/apk.yml`) builds a **debug sideload APK** on GitHub Actions:
+Actions → APK → Run workflow, then download the `opengym-rpg-sideload-debug-apk` artifact.
+
+- It installs as `ch.duartesantos.opengym.test` (a separate app next to the real one, its own data),
+  so no signing key is needed and it does not replace your current app.
+- To use it on your real data, sign in to your server from it (Settings → Server & sync).
+- `versionCode` is not bumped on purpose: a different package needs no bump, and the line would
+  conflict with every upstream release.
+- A signed release APK that updates the real app in place needs your own signing key
+  (`scripts/android/build-release.sh`); not set up here.
