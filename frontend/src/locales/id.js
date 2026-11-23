@@ -5862,4 +5862,17 @@ export default {
   "Preview on": "Pratinjau di",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "sedikit lebih singkat",
+  // --- rpg fork: character sheet ---
+  "RPG": "RPG",
+  "Turn your training into a character: level, XP, attributes and titles.": "Ubah latihanmu menjadi karakter: level, XP, atribut, dan gelar.",
+  "Novice": "Pemula",
+  "Apprentice": "Murid",
+  "Warrior": "Prajurit",
+  "Champion": "Juara",
+  "Legend": "Legenda",
+  "First workout": "Latihan pertama",
+  "Attributes": "Atribut",
+  "Badges": "Lencana",
+  "{0} XP": "{0} XP",
+  "{0} XP to level {1}": "{0} XP lagi ke level {1}",
 };

@@ -5952,4 +5952,17 @@ export default {
   "Preview on": "المعاينة على",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "أقصر قليلًا",
+  // --- rpg fork: character sheet ---
+  "RPG": "لعبة تقمص الأدوار",
+  "Turn your training into a character: level, XP, attributes and titles.": "حوّل تمرينك إلى شخصية: مستوى ونقاط خبرة وسمات وألقاب.",
+  "Novice": "مبتدئ",
+  "Apprentice": "متدرّب",
+  "Warrior": "محارب",
+  "Champion": "بطل",
+  "Legend": "أسطورة",
+  "First workout": "أول تمرين",
+  "Attributes": "السمات",
+  "Badges": "الشارات",
+  "{0} XP": "{0} نقطة خبرة",
+  "{0} XP to level {1}": "{0} نقطة خبرة للمستوى {1}",
 }

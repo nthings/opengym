@@ -5901,4 +5901,17 @@ export default {
   "Preview on": "Предпросмотр на",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "чуть покороче",
+  // --- rpg fork: character sheet ---
+  "RPG": "РПГ",
+  "Turn your training into a character: level, XP, attributes and titles.": "Преврати тренировки в персонажа: уровень, опыт, характеристики и звания.",
+  "Novice": "Новичок",
+  "Apprentice": "Ученик",
+  "Warrior": "Воин",
+  "Champion": "Чемпион",
+  "Legend": "Легенда",
+  "First workout": "Первая тренировка",
+  "Attributes": "Характеристики",
+  "Badges": "Значки",
+  "{0} XP": "{0} XP",
+  "{0} XP to level {1}": "{0} XP до уровня {1}",
 }

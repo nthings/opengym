@@ -5863,4 +5863,17 @@ export default {
   "Preview on": "Náhled na",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "kratší",
+  // --- rpg fork: character sheet ---
+  "RPG": "RPG",
+  "Turn your training into a character: level, XP, attributes and titles.": "Změň svůj trénink v postavu: úroveň, zkušenosti, vlastnosti a tituly.",
+  "Novice": "Nováček",
+  "Apprentice": "Učedník",
+  "Warrior": "Bojovník",
+  "Champion": "Šampion",
+  "Legend": "Legenda",
+  "First workout": "První trénink",
+  "Attributes": "Vlastnosti",
+  "Badges": "Odznaky",
+  "{0} XP": "{0} XP",
+  "{0} XP to level {1}": "{0} XP do úrovně {1}",
 }

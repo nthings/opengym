@@ -5893,4 +5893,17 @@ export default {
   "Preview on": "Peržiūra",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "šiek tiek trumpiau",
+  // --- rpg fork: character sheet ---
+  "RPG": "RPG",
+  "Turn your training into a character: level, XP, attributes and titles.": "Paverskite treniruotes personažu: lygis, XP, atributai ir titulai.",
+  "Novice": "Naujokas",
+  "Apprentice": "Mokinys",
+  "Warrior": "Karys",
+  "Champion": "Čempionas",
+  "Legend": "Legenda",
+  "First workout": "Pirmoji treniruotė",
+  "Attributes": "Atributai",
+  "Badges": "Ženkliukai",
+  "{0} XP": "{0} XP",
+  "{0} XP to level {1}": "{0} XP iki {1} lygio",
 }

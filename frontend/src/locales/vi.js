@@ -5863,4 +5863,17 @@ export default {
   "Preview on": "Xem trước trên",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "ngắn hơn",
+  // --- rpg fork: character sheet ---
+  "RPG": "RPG",
+  "Turn your training into a character: level, XP, attributes and titles.": "Biến buổi tập thành một nhân vật: cấp độ, XP, thuộc tính và danh hiệu.",
+  "Novice": "Tân binh",
+  "Apprentice": "Học việc",
+  "Warrior": "Chiến binh",
+  "Champion": "Nhà vô địch",
+  "Legend": "Huyền thoại",
+  "First workout": "Buổi tập đầu tiên",
+  "Attributes": "Thuộc tính",
+  "Badges": "Huy hiệu",
+  "{0} XP": "{0} XP",
+  "{0} XP to level {1}": "Còn {0} XP để lên cấp {1}",
 };

@@ -1174,6 +1174,8 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           subtitle={t('The muscle with the most room left this week, under your streak.')}>
           <Switch aria-label={t('Weekly sets on Home')} checked={S.homeMuscleSets === true} onChange={v => update(s => { s.homeMuscleSets = v })} />
         </Row>
+        {/* rpg fork hook */}
+        {on('rpg') && <Row icon="medal" iconTint="var(--purple)" title={t('RPG')} accessory="chevron" onClick={() => nav('/rpg')} />}
         {on('motivation') && <Row icon="target" iconTint="var(--orange)" title={t('Monthly challenges')}
           subtitle={t('Three goals a month on Home, sized to how you train.')}>
           <Switch aria-label={t('Monthly challenges')} checked={S.monthlyChallenges !== false} onChange={v => update(s => { s.monthlyChallenges = v })} />

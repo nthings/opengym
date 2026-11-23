@@ -5976,4 +5976,17 @@ export default {
   "Preview on": "প্রিভিউ দেখুন",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "একটু কম সময়",
+  // --- rpg fork: character sheet ---
+  "RPG": "আরপিজি",
+  "Turn your training into a character: level, XP, attributes and titles.": "আপনার প্রশিক্ষণকে একটি চরিত্রে বদলে দিন: লেভেল, এক্সপি, বৈশিষ্ট্য ও উপাধি।",
+  "Novice": "নবিস",
+  "Apprentice": "শিক্ষানবিস",
+  "Warrior": "যোদ্ধা",
+  "Champion": "চ্যাম্পিয়ন",
+  "Legend": "কিংবদন্তি",
+  "First workout": "প্রথম ওয়ার্কআউট",
+  "Attributes": "বৈশিষ্ট্য",
+  "Badges": "ব্যাজ",
+  "{0} XP": "{0} এক্সপি",
+  "{0} XP to level {1}": "লেভেল {1} পর্যন্ত {0} এক্সপি",
 }

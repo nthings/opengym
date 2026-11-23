@@ -5897,4 +5897,17 @@ export default {
   "Preview on": "预览位置",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "缩短一点",
+  // --- rpg fork: character sheet ---
+  "RPG": "角色扮演",
+  "Turn your training into a character: level, XP, attributes and titles.": "把训练变成一个角色：等级、经验值、属性和称号。",
+  "Novice": "新手",
+  "Apprentice": "学徒",
+  "Warrior": "战士",
+  "Champion": "冠军",
+  "Legend": "传奇",
+  "First workout": "第一次训练",
+  "Attributes": "属性",
+  "Badges": "徽章",
+  "{0} XP": "{0} 经验值",
+  "{0} XP to level {1}": "距 {1} 级还差 {0} 经验值",
 }

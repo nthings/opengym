@@ -5897,4 +5897,17 @@ export default {
   "Preview on": "미리 볼 화면",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "조금 짧게",
+  // --- rpg fork: character sheet ---
+  "RPG": "RPG",
+  "Turn your training into a character: level, XP, attributes and titles.": "운동을 캐릭터로 바꿔 보세요: 레벨, 경험치, 능력치, 칭호.",
+  "Novice": "초보자",
+  "Apprentice": "견습생",
+  "Warrior": "전사",
+  "Champion": "챔피언",
+  "Legend": "전설",
+  "First workout": "첫 운동",
+  "Attributes": "능력치",
+  "Badges": "배지",
+  "{0} XP": "{0} XP",
+  "{0} XP to level {1}": "{1}레벨까지 {0} XP",
 }

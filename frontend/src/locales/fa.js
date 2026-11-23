@@ -5863,4 +5863,17 @@ export default {
   "Preview on": "پیش‌نمایش روی",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "کمی کوتاه‌تر",
+  // --- rpg fork: character sheet ---
+  "RPG": "نقش‌آفرینی",
+  "Turn your training into a character: level, XP, attributes and titles.": "تمرینت را به یک شخصیت تبدیل کن: سطح، امتیاز تجربه، ویژگی‌ها و عنوان‌ها.",
+  "Novice": "تازه‌کار",
+  "Apprentice": "شاگرد",
+  "Warrior": "جنگجو",
+  "Champion": "قهرمان",
+  "Legend": "افسانه",
+  "First workout": "اولین تمرین",
+  "Attributes": "ویژگی‌ها",
+  "Badges": "نشان‌ها",
+  "{0} XP": "{0} امتیاز تجربه",
+  "{0} XP to level {1}": "{0} امتیاز تجربه تا سطح {1}",
 }

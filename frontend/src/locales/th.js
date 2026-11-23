@@ -5908,4 +5908,17 @@ export default {
   "Preview on": "ดูตัวอย่างบน",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "สั้นลงหน่อย",
+  // --- rpg fork: character sheet ---
+  "RPG": "อาร์พีจี",
+  "Turn your training into a character: level, XP, attributes and titles.": "เปลี่ยนการเทรนของคุณให้เป็นตัวละคร: เลเวล แต้มประสบการณ์ ค่าสถานะ และฉายา",
+  "Novice": "มือใหม่",
+  "Apprentice": "ผู้ฝึกหัด",
+  "Warrior": "นักรบ",
+  "Champion": "แชมเปี้ยน",
+  "Legend": "ตำนาน",
+  "First workout": "เวิร์กเอาต์ครั้งแรก",
+  "Attributes": "ค่าสถานะ",
+  "Badges": "ตราสัญลักษณ์",
+  "{0} XP": "{0} XP",
+  "{0} XP to level {1}": "อีก {0} XP ถึงเลเวล {1}",
 }

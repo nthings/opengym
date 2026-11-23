@@ -5897,4 +5897,17 @@ export default {
   "Preview on": "Önizleme yeri",
   // 1.4.5 UX round, P2: timed holds in the finish summary (next hold is shorter)
   "shorter": "biraz daha kısa",
+  // --- rpg fork: character sheet ---
+  "RPG": "RPG",
+  "Turn your training into a character: level, XP, attributes and titles.": "Antrenmanını bir karaktere dönüştür: seviye, XP, nitelikler ve unvanlar.",
+  "Novice": "Çaylak",
+  "Apprentice": "Çırak",
+  "Warrior": "Savaşçı",
+  "Champion": "Şampiyon",
+  "Legend": "Efsane",
+  "First workout": "İlk antrenman",
+  "Attributes": "Nitelikler",
+  "Badges": "Rozetler",
+  "{0} XP": "{0} XP",
+  "{0} XP to level {1}": "{1}. seviyeye {0} XP",
 }
