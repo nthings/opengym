@@ -12,12 +12,23 @@ describe('modules', () => {
     expect(new Set(MODULE_IDS).size).toBe(MODULE_IDS.length)
   })
 
-  it('a profile from before Modules has every module on', () => {
-    for (const id of MODULE_IDS) expect(isOn({}, id)).toBe(true)
+  it('a profile from before Modules has every module on, except the opt-in RPG', () => {
+    for (const id of MODULE_IDS.filter(id => id !== 'rpg')) expect(isOn({}, id)).toBe(true)
     expect(isOn(null, 'body')).toBe(true)
     expect(isOn({ modules: 'junk' }, 'body')).toBe(true)
     expect(presetOf({})).toBe('all')
-    expect(onCount({})).toBe(MODULE_IDS.length)
+    expect(onCount({})).toBe(MODULE_IDS.length - 1)
+  })
+
+  it('the RPG module is opt-in: off unless someone switched it on', () => {
+    expect(isOn({}, 'rpg')).toBe(false)
+    expect(isOn(null, 'rpg')).toBe(false)
+    expect(isOn({ modules: { rpg: false } }, 'rpg')).toBe(false)
+    expect(isOn({ modules: { rpg: true } }, 'rpg')).toBe(true)
+    const s = {}
+    setModule(s, 'rpg', true)
+    expect(isOn(s, 'rpg')).toBe(true)
+    expect(presetOf(s)).toBe('custom')
   })
 
   it('reads an explicit choice, and an unknown id is on', () => {

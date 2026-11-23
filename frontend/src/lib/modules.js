@@ -46,6 +46,9 @@ export const MODULES = [
     desc: 'Webhooks for Home Assistant and friends, and the MCP server.' },
   { id: 'community', group: 'extras', icon: 'globe', tint: 'var(--blue)', title: 'Community',
     desc: 'Exercises, plans and sounds people on your server shared, and a way to share yours.' },
+  // rpg fork hook: opt-in module, see rpg/ and docs/RPG.md
+  { id: 'rpg', group: 'extras', icon: 'medal', tint: 'var(--purple)', title: 'RPG',
+    desc: 'Turn your training into a character: level, XP, attributes and titles.' },
   { id: 'seasonal', group: 'extras', icon: 'pumpkin', tint: 'var(--orange)', title: 'Seasonal themes',
     desc: 'Halloween and friends, little extras for the time of year. All optional.' },
 ]
@@ -63,7 +66,8 @@ const TRAINING = ['effort', 'plates', 'watch']
 export const PRESETS = [
   { id: 'training', title: 'Just training', desc: 'Log, plan, progress. Nothing else on the screen.', on: TRAINING },
   { id: 'body', title: 'Training and body', desc: 'Plus weigh-ins, measurements, photos and your health apps.', on: [...TRAINING, 'strength', 'body', 'health'] },
-  { id: 'all', title: 'Everything', desc: 'Streaks, the Coach, themes, the lot.', on: MODULE_IDS },
+  // rpg fork hook: the RPG is opt-in, so "Everything" leaves it out and an untouched profile stays "all"
+  { id: 'all', title: 'Everything', desc: 'Streaks, the Coach, themes, the lot.', on: MODULE_IDS.filter(id => id !== 'rpg') },
 ]
 export const PRESET = Object.fromEntries(PRESETS.map(p => [p.id, p]))
 
@@ -84,6 +88,7 @@ export function isOn(S, id) {
   if (typeof v === 'boolean') return v
   // Before 1.4.4 the check-in had its own switch in Look & Home; it decides until Modules does.
   if (id === 'checkin') return S?.checkIn !== false
+  if (id === 'rpg') return false // rpg fork hook: opt-in, only an explicit true (above) turns it on
   return true
 }
 

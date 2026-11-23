@@ -17,6 +17,7 @@ export const moduleCopy = () => ({
   coach: [t('AI Coach'), t('Reviews your training and suggests changes. You still say yes or no.')],
   integrations: [t('Integrations'), t('Webhooks for Home Assistant and friends, and the MCP server.')],
   community: [t('Community'), t('Exercises, plans and sounds people on your server shared, and a way to share yours.')],
+  rpg: [t('RPG'), t('Turn your training into a character: level, XP, attributes and titles.')], // rpg fork hook
   seasonal: [t('Seasonal themes'), t('Halloween and friends, little extras for the time of year. All optional.')],
 })
 

@@ -58,7 +58,8 @@ describe('the Modules page', () => {
     for (const m of MODULES) {
       expect(row(m.title), m.id).toBeTruthy()
       expect(row(m.title).querySelector('.lrow-s').textContent).toBe(m.desc)
-      expect(sw(m.title).getAttribute('aria-checked')).toBe('true')
+      // The RPG is opt-in (rpg fork hook): every other module is on, it is off until chosen.
+      expect(sw(m.title).getAttribute('aria-checked')).toBe(m.id === 'rpg' ? 'false' : 'true')
     }
     expect(row('Start from').querySelector('.lrow-v').textContent).toBe('Everything')
   })
@@ -75,7 +76,7 @@ describe('the Modules page', () => {
     mount()
     expect(sw('Seasonal themes').getAttribute('aria-checked')).toBe('false')
     expect(row('Start from').querySelector('.lrow-v').textContent).toBe('Custom')
-    expect(host.textContent).toContain('11 of 12 modules on.')
+    expect(host.textContent).toContain('11 of 13 modules on.')
     act(() => sw('Seasonal themes').click())
     expect(isOn(mocks.S, 'seasonal')).toBe(true)
   })
