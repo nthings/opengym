@@ -422,7 +422,6 @@ export const PT_BR_OVERRIDES = {
   "Badges on your profile": "Medalhas no seu perfil",
   // --- rpg fork: character sheet; the rest (Aprendiz, Guerreiro, Campeão, Lenda, Atributos, {0} XP...) is the same in pt-BR ---
   "Badges": "Medalhas",
-  "Level, XP, attributes and badges.": "Nível, XP, atributos e medalhas.",
   "Turn your training into a character: level, XP, attributes and titles.": "Transforme seu treino em um personagem: nível, XP, atributos e títulos.",
   "Bodyweight moves from easier to harder. Own every set at the top of the range and the next rung is yours.": "Exercícios com o peso do corpo, do mais fácil ao mais difícil. Domine cada série no topo da faixa e o próximo degrau é seu.",
   "Build a session": "Montar uma sessão",

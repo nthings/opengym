@@ -1,8 +1,7 @@
 # RPG module (fork)
 
 An opt-in module that turns your training into a character. **Settings → Modules → RPG** switches it
-on (it is off for every profile until someone chooses it); then **Stats → RPG** (next to Journal and
-Tools, under Lifts) opens the sheet.
+on (it is off for every profile until someone chooses it); then an **RPG** tab appears in the bottom bar, after Exercises.
 
 Nothing is stored. Level, XP, attributes, title and badges are computed from your workouts every
 time (`frontend/src/rpg/xp.js`), so devices, backups and imports always agree, and nothing needs
@@ -41,9 +40,9 @@ grep -rn "rpg fork hook" frontend/src
 | `lib/modules.js` | the `rpg` entry, the `all` preset without it, `isOn` returning false for it |
 | `lib/modules-copy.js` | its title and description |
 | `App.jsx` | lazy import and the `/rpg` route |
-| `views/Stats.jsx` | one row, next to Journal and Tools, that opens the sheet |
-| `locales/*.js` | 13 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 2 overrides) |
-| tests | `modules.test.js`, `views/Modules.test.jsx` (RPG off by default), `lib/pt-br-locale.test.js` (inheritance fingerprint) |
+| `components/TabBar.jsx` | the RPG tab, shown only with the module on |
+| `locales/*.js` | 12 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 2 overrides) |
+| tests | `components/TabBar.test.jsx` (RPG tab cases), `modules.test.js`, `views/Modules.test.jsx` (RPG off by default), `lib/pt-br-locale.test.js` (inheritance fingerprint) |
 
 If upstream adds a locale key at the end of a pack, the conflict is just two appended blocks: keep both.
 
@@ -123,4 +122,4 @@ A new stack starts empty. Two ways to get your history into it:
    until you repeat the copy. To undo, `docker compose down`, `sudo rm -rf data && sudo mv data.bak data`,
    `docker compose up -d`.
 
-Then switch the module on in the test instance: Settings, Modules, RPG. The sheet is under Stats.
+Then switch the module on in the test instance: Settings, Modules, RPG. The RPG tab is in the bottom bar.

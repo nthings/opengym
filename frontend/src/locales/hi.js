@@ -5910,5 +5910,4 @@ export default {
   "Badges": "बैज",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "लेवल {1} तक {0} XP",
-  "Level, XP, attributes and badges.": "लेवल, XP, गुण और बैज।",
 }

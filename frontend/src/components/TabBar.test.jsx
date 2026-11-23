@@ -37,6 +37,25 @@ afterEach(() => {
 
 const tabs = () => [...host.querySelectorAll('#tabbar button')]
 
+describe('the RPG tab (opt-in module)', () => {
+  it('is not there by default, and appears last once the module is on', () => {
+    act(() => { root.render(<TabBar onStart={() => {}} />) })
+    expect(tabs()).toHaveLength(5)
+    act(() => { useStore.getState().update(s => { s.modules = { rpg: true } }, false) })
+    const t = tabs()
+    expect(t).toHaveLength(6)
+    expect(t[5].textContent).toBe('RPG')
+  })
+
+  it('lights up on its own screen', () => {
+    useStore.setState({ S: { ...JSON.parse(JSON.stringify(DEF)), modules: { rpg: true } } })
+    where.loc = { pathname: '/rpg' }
+    act(() => { root.render(<TabBar onStart={() => {}} />) })
+    expect(tabs()[5].className).toBe('on')
+    expect(tabs()[0].className).toBe('')
+  })
+})
+
 describe('the tab bar across a store write', () => {
   it('keeps the very same buttons instead of rebuilding them every tick', () => {
     act(() => { root.render(<TabBar onStart={() => {}} />) })

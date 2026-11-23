@@ -5913,5 +5913,4 @@ export default {
   "Badges": "Jelvények",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP a(z) {1}. szintig",
-  "Level, XP, attributes and badges.": "Szint, XP, tulajdonságok és jelvények.",
 }

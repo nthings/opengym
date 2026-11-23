@@ -5906,5 +5906,4 @@ export default {
   "Badges": "Ženkliukai",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP iki {1} lygio",
-  "Level, XP, attributes and badges.": "Lygis, XP, atributai ir ženkliukai.",
 }

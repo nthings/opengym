@@ -5876,5 +5876,4 @@ export default {
   "Badges": "Huy hiệu",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "Còn {0} XP để lên cấp {1}",
-  "Level, XP, attributes and badges.": "Cấp độ, XP, thuộc tính và huy hiệu.",
 };

@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { t, tn } from '../lib/i18n.js'
 import { todayISO } from '../lib/format.js'
@@ -19,7 +18,6 @@ const bar = (pct, tint) => (
 )
 
 export default function RpgSheet() {
-  const nav = useNavigate()
   const S = useStore(s => s.S)
   const today = todayISO()
   // Same inputs the streak card on Home reads (views/Home.jsx), plus the workouts themselves.
@@ -29,8 +27,7 @@ export default function RpgSheet() {
 
   return <div className="narrow rpg">
     <div className="hdr">
-      <button className="iconbtn" data-back="/stats" onClick={() => nav('/stats')} aria-label={t('Stats')}><Icon name="chevronLeft" /></button>
-      <div style={{ flex: 1, marginInlineStart: 12 }}><h1>{t('RPG')}</h1>
+      <div style={{ flex: 1 }}><h1>{t('RPG')}</h1>
         <div className="sub">{tn('{0} workout', '{0} workouts', sheet.stats.workouts)}</div></div>
     </div>
 

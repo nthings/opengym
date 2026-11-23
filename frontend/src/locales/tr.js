@@ -5910,5 +5910,4 @@ export default {
   "Badges": "Rozetler",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{1}. seviyeye {0} XP",
-  "Level, XP, attributes and badges.": "Seviye, XP, nitelikler ve rozetler.",
 }

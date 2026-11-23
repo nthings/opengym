@@ -5910,5 +5910,4 @@ export default {
   "Badges": "Insignias",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP para el nivel {1}",
-  "Level, XP, attributes and badges.": "Nivel, XP, atributos e insignias.",
 }

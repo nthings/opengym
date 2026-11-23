@@ -5957,5 +5957,4 @@ export default {
   "Badges": "Märken",
   "{0} XP": "{0} XP",
   "{0} XP to level {1}": "{0} XP till nivå {1}",
-  "Level, XP, attributes and badges.": "Nivå, XP, egenskaper och märken.",
 }

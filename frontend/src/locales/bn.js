@@ -5989,5 +5989,4 @@ export default {
   "Badges": "ব্যাজ",
   "{0} XP": "{0} এক্সপি",
   "{0} XP to level {1}": "লেভেল {1} পর্যন্ত {0} এক্সপি",
-  "Level, XP, attributes and badges.": "লেভেল, এক্সপি, বৈশিষ্ট্য ও ব্যাজ।",
 }
