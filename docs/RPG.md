@@ -9,7 +9,8 @@ syncing. Switching the module off only hides it.
 
 ## XP
 
-Per training day (several workouts on one day count as one day):
+Per training day (several workouts on one day count as one day; a day needs at least one ticked-off
+work set, so an empty workout or one with only warm-ups earns nothing):
 
 | Source | XP |
 |---|---|
@@ -44,6 +45,13 @@ grep -rn "rpg fork hook" frontend/src
 | tests | `modules.test.js`, `views/Modules.test.jsx` (RPG off by default), `lib/pt-br-locale.test.js` (inheritance fingerprint) |
 
 If upstream adds a locale key at the end of a pack, the conflict is just two appended blocks: keep both.
+
+## Known limits
+
+- Sets logged by time or distance only (no weight x reps) earn the 50 for the day but no volume XP.
+- The weekly streak bonus follows the core streak (`lib/streak.js`), which counts any saved workout,
+  even an empty one. The module does not edit core code to change that.
+- Imported history (Strong, Hevy) counts for the character in full.
 
 ## Not built yet
 

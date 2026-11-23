@@ -9,7 +9,7 @@
 //                session with stretching or cooldown work. Capped at 400 a day, so one monster
 //                session cannot buy a level.
 // and 25 per week of the best weekly streak (lib/streak.js), the long-haul consistency reward.
-import { todayISO } from '../lib/format.js'
+import { todayISO, isoOf } from '../lib/format.js'
 import { streakInfo } from '../lib/streak.js'
 import { loadOfWorkouts } from '../lib/muscles.js'
 import { exOr } from '../lib/exercises.js'
@@ -50,11 +50,13 @@ export function levelOf(xp) {
   return { level, xp: x, into, span, toNext: span - into }
 }
 
+// A usable number: finite and never negative, so one odd set cannot turn the total into NaN.
+const num = v => { const n = Number(v); return Number.isFinite(n) && n > 0 ? n : 0 }
 const ISO = /^\d{4}-\d{2}-\d{2}$/
 const dayOf = w => {
   if (typeof w?.d === 'string' && ISO.test(w.d)) return w.d
   const at = workoutAt(w)
-  return Number.isFinite(at) ? todayISO(new Date(at)) : null
+  return Number.isFinite(at) ? isoOf(new Date(at)) : null
 }
 
 const BADGES = [
@@ -76,13 +78,14 @@ export function rpgState(S, today = todayISO()) {
   for (const w of workouts) {
     const day = dayOf(w)
     if (!day) continue
-    const d = days.get(day) || { volume: 0, prs: 0, stretch: false }
+    const d = days.get(day) || { volume: 0, prs: 0, stretch: false, worked: false }
     for (const e of Array.isArray(w.entries) ? w.entries : []) {
       let worked = false
       for (const s of Array.isArray(e?.sets) ? e.sets : []) {
         if (!s?.done || isWarmupRow(s)) continue
         worked = true
-        d.volume += (Number(s.w) || 0) * (Number(s.r) || 0)
+        d.worked = true
+        d.volume += num(s.w) * num(s.r)
       }
       if (worked && STRETCH_CATS.includes(exOr(e.id)?.cat)) d.stretch = true
     }
@@ -93,7 +96,8 @@ export function rpgState(S, today = todayISO()) {
   let xp = 0
   let volume = 0
   let prs = 0
-  for (const d of days.values()) {
+  for (const [day, d] of days) {
+    if (!d.worked) { days.delete(day); continue } // nothing ticked off: showing up needs a set
     const performance = Math.floor(d.volume / KG_PER_XP) + d.prs * PR_XP + (d.stretch ? STRETCH_XP : 0)
     xp += DAY_XP + Math.min(DAY_PERFORMANCE_CAP, performance)
     volume += d.volume

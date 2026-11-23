@@ -52,11 +52,15 @@ describe('rpgState', () => {
     expect(rpgState(S).xp).toBe(50 + 10 + WEEK)
   })
 
-  it('warm-up rows and unticked sets add nothing', () => {
-    const S = { workouts: [workout('2026-11-02', [
+  it('warm-up rows and unticked sets add nothing, and next to a real set they add no volume', () => {
+    const only = { workouts: [workout('2026-11-02', [
       { id: '0025', sets: [{ w: 100, r: 10, done: true, warmup: true }, { w: 100, r: 10 }] },
     ])] }
-    expect(rpgState(S).xp).toBe(50 + WEEK)
+    expect(rpgState(only).stats.volume).toBe(0)
+    const mixed = { workouts: [workout('2026-11-02', [
+      { id: '0025', sets: [{ w: 100, r: 10, done: true, warmup: true }, { w: 100, r: 10 }, { w: 50, r: 10, done: true }] },
+    ])] }
+    expect(rpgState(mixed).xp).toBe(50 + 5 + WEEK)
   })
 
   it('each personal record in a workout is 25 XP', () => {
@@ -90,6 +94,39 @@ describe('rpgState', () => {
     const S = { workouts: [{ id: 'w', start: at, entries: [{ id: '0025', sets: sets([10, 10]) }] }] }
     // The day counts; the core streak walk only reads `d`, so no streak week comes with it.
     expect(rpgState(S).xp).toBe(50 + 1)
+  })
+
+  it('a workout with no ticked-off work set earns no day XP (only warm-ups, or nothing done)', () => {
+    const S = { workouts: [
+      workout('2026-11-02', []),
+      workout('2026-11-03', [{ id: '0025', sets: [{ w: 100, r: 10 }, { w: 60, r: 8, done: true, warmup: true }] }]),
+    ] }
+    const s = rpgState(S)
+    expect(s.stats.days).toBe(0)
+    // Only the core weekly streak (lib/streak.js, which counts any workout) still pays out.
+    expect(s.xp).toBe(s.stats.bestStreak * 25)
+    expect(s.stats.workouts).toBe(2)
+  })
+
+  it('workouts with no day but a start each count on their own day', () => {
+    const at = d => new Date(d + 'T18:00:00').getTime()
+    const S = { workouts: [
+      { id: 'a', start: at('2026-11-04'), entries: [{ id: '0025', sets: sets([10, 10]) }] },
+      { id: 'b', start: at('2026-11-05'), entries: [{ id: '0025', sets: sets([10, 10]) }] },
+    ] }
+    const s = rpgState(S)
+    expect(s.stats.days).toBe(2)
+    expect(s.xp).toBe(2 * (50 + 1))
+  })
+
+  it('odd numbers never break the character: NaN, Infinity, negatives and strings', () => {
+    const S = { workouts: [workout('2026-11-02', [{ id: '0025', sets: [
+      { w: Infinity, r: 0, done: true }, { w: NaN, r: 5, done: true }, { w: -50, r: 10, done: true }, { w: '100', r: '10', done: true },
+    ] }])] }
+    const s = rpgState(S)
+    expect(Number.isFinite(s.xp)).toBe(true)
+    expect(s.xp).toBe(50 + 10 + WEEK) // only the "100" x "10" set counts
+    expect(s.stats.volume).toBe(1000)
   })
 
   it('the best streak adds 25 per week', () => {
