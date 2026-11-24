@@ -40,9 +40,9 @@ grep -rn "rpg fork hook" frontend/src
 |---|---|
 | `lib/modules.js` | the `rpg` entry, the `all` preset without it, `isOn` returning false for it |
 | `lib/modules-copy.js` | its title and description |
-| `App.jsx` | lazy imports and the `/rpg` and `/rpg/badges` routes |
+| `App.jsx` | lazy imports and the `/rpg`, `/rpg/badges` and `/rpg/friends` routes |
 | `components/TabBar.jsx` | the RPG tab, and the call to `useLevelUp` (the "Level up!" toast, a no-op with the module off) |
-| `locales/*.js` | 16 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 2 overrides) |
+| `locales/*.js` | 29 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 2 overrides) |
 | tests | `components/TabBar.test.jsx` (RPG tab cases), `modules.test.js`, `views/Modules.test.jsx` (RPG off by default), `lib/pt-br-locale.test.js` (inheritance fingerprint) |
 
 If upstream adds a locale key at the end of a pack, the conflict is just two appended blocks: keep both.
@@ -65,7 +65,9 @@ Off unless the server runs with `RPG=on` (and `RPG_ALLOW_LAN=1` to reach friends
 for tests). Then each profile gets an Ed25519 key pair, a friends list and one-time invite links
 (48 hours), kept in `DATA_DIR/rpg/<userId>.json` (mode 600). Friends swap public keys through the
 link: `POST /api/rpg/invite`, `POST /api/rpg/add` (this server calls the other one's
-`POST /api/rpg/accept`), `GET /api/rpg/friends`, `POST /api/rpg/remove`. Nothing about training
+`POST /api/rpg/accept`), `GET /api/rpg/friends`, `POST /api/rpg/remove`. The app side is the **Friends** row on the RPG sheet (`/rpg/friends`: make an invite link, paste a
+friend's link to add them, remove). Open the link's address only to copy it: it is pasted into the
+app, not visited. Nothing about training
 moves yet: the signed log, the ranking and the flags are stages B and C
 (`docs/superpowers/specs/2026-11-23-rpg-friends-design.md`).
 
