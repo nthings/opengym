@@ -82,13 +82,13 @@ export default function Friends() {
       {ranking.length > 1 && <Section title={t('This week')} footer={t('Counts the last 7 days. Workouts logged late or edited afterwards do not count.')}>
         {ranking.map(r => <Row key={r.id} className="rpg-rank" icon={r.rank === 1 ? 'medal' : 'person'} iconTint={r.rank === 1 ? 'var(--yellow)' : 'var(--teal)'}
           title={(r.rank ? r.rank + '. ' : '') + (r.me ? t('You') : r.name)}
-          subtitle={r.broken ? t('History does not add up') : r.error ? t('Could not update') : r.streak > 0 ? t('{0} week streak', r.streak) : null}
+          subtitle={r.broken ? t('History does not add up') : r.error ? t('Could not update') : r.streak > 0 ? t('Streak') + ': ' + r.streak : null}
           value={r.broken ? null : t('{0} XP', r.weekXp)} />)}
       </Section>}
       <Section title={t('Friends')}>
         {friends.length === 0 && <div className="card muted">{t('No friends yet.')}</div>}
         {friends.map(f => <Row key={f.id} icon="person" iconTint="var(--teal)" title={f.name || hostOf(f.serverUrl)} subtitle={hostOf(f.serverUrl)}>
-          <Button variant="ghost" onClick={() => remove(f)}>{t('Remove')}</Button>
+          <Button variant="ghost" style={{ marginInlineStart: 'auto' }} onClick={() => remove(f)}>{t('Remove')}</Button>
         </Row>)}
       </Section>
 

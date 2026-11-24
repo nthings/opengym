@@ -124,6 +124,8 @@ describe('Friends', () => {
     expect(rows[0].textContent).toContain('80 XP')
     expect(rows[1].textContent).toContain('You')
     expect(rows[1].textContent).toContain('60 XP')
+    // A count of one must not read "1 semanas": the streak is a label and a number, not a plural.
+    expect(rows[1].textContent).toContain('Streak: 1')
     expect(host.textContent).toContain('do not count')
   })
 
