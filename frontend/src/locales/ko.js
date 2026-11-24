@@ -5928,4 +5928,7 @@ export default {
   "That is not a valid invite link.": "올바른 초대 링크가 아닙니다.",
   "Could not reach that server.": "해당 서버에 연결할 수 없습니다.",
   "That invite is yours. Send it to a friend.": "내 초대입니다. 친구에게 보내세요.",
+  "History does not add up": "기록이 맞지 않습니다",
+  "Could not update": "업데이트할 수 없습니다",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "최근 7일을 집계합니다. 늦게 기록했거나 나중에 수정한 운동은 포함되지 않습니다.",
 }

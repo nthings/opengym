@@ -5928,4 +5928,7 @@ export default {
   "That is not a valid invite link.": "यह मान्य आमंत्रण लिंक नहीं है।",
   "Could not reach that server.": "उस सर्वर तक नहीं पहुँचा जा सका।",
   "That invite is yours. Send it to a friend.": "यह आमंत्रण आपका अपना है। इसे किसी दोस्त को भेजें।",
+  "History does not add up": "इतिहास मेल नहीं खाता",
+  "Could not update": "अपडेट नहीं हो सका",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "पिछले 7 दिन गिने जाते हैं। देर से दर्ज या बाद में बदले गए वर्कआउट नहीं गिने जाते।",
 }

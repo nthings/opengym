@@ -5868,4 +5868,7 @@ export default {
   "That is not a valid invite link.": "Det er ikke et gyldigt invitationslink.",
   "Could not reach that server.": "Kunne ikke nå den server.",
   "That invite is yours. Send it to a friend.": "Den invitation er din egen. Send den til en ven.",
+  "History does not add up": "Historikken stemmer ikke",
+  "Could not update": "Kunne ikke opdatere",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Tæller de seneste 7 dage. Træninger, der er logget for sent eller ændret bagefter, tæller ikke.",
 }

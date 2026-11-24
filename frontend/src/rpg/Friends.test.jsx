@@ -18,6 +18,7 @@ let friends, root, host
 const answer = (path, opts) => {
   if (path === '/api/rpg/status') return Promise.resolve({ on: mocks.on })
   if (path === '/api/rpg/friends') return Promise.resolve({ publicKey: 'P'.repeat(43), friends: [...friends], invites: 0 })
+  if (path === '/api/rpg/board') return Promise.resolve(mocks.board)
   if (path === '/api/rpg/invite') return Promise.resolve({ link: 'https://me.example.com/#/rpg/invite/' + 'T'.repeat(43), expiresAt: 1 })
   if (path === '/api/rpg/add') {
     if (mocks.addError) return Promise.reject(Object.assign(new Error('server words'), { status: 400, data: { code: mocks.addError } }))
@@ -40,7 +41,9 @@ const type = (input, v) => act(() => {
   input.dispatchEvent(new Event('input', { bubbles: true }))
 })
 
-beforeEach(() => { friends = []; mocks.on = true; mocks.addError = null; mocks.api.mockReset(); mocks.api.mockImplementation(answer); mocks.copy.mockClear() })
+const wk = (id, d, w) => ({ wid: id, flag: '', workout: { id, d, name: 'x', entries: [{ id: '0025', sets: [{ w, r: 10, done: true }] }], prs: [] } })
+const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') }
+beforeEach(() => { mocks.board = { me: { name: 'Me', workouts: [] }, friends: [] }; friends = []; mocks.on = true; mocks.addError = null; mocks.api.mockReset(); mocks.api.mockImplementation(answer); mocks.copy.mockClear() })
 afterEach(() => { act(() => root.unmount()); host.remove() })
 
 describe('Friends', () => {
@@ -106,5 +109,42 @@ describe('Friends', () => {
     await flush()
     expect(JSON.parse(mocks.api.mock.calls.find(c => c[0] === '/api/rpg/remove')[1].body)).toEqual({ id: 'f1' })
     expect(host.textContent).toContain('No friends yet.')
+  })
+
+  it('ranks me and my friends for the week, best first, with the rules underneath', async () => {
+    friends = [ana]
+    mocks.board = {
+      me: { name: 'Me', workouts: [wk('m', today(), 100)] },
+      friends: [{ ...ana, error: null, broken: null, workouts: [wk('a', today(), 300)] }],
+    }
+    await mount()
+    const rows = [...host.querySelectorAll('.rpg-rank')]
+    expect(rows).toHaveLength(2)
+    expect(rows[0].textContent).toContain('Ana')
+    expect(rows[0].textContent).toContain('80 XP')
+    expect(rows[1].textContent).toContain('You')
+    expect(rows[1].textContent).toContain('60 XP')
+    expect(host.textContent).toContain('do not count')
+  })
+
+  it('shows a friend who cannot be updated, or whose history does not add up, without ranking them', async () => {
+    friends = [ana]
+    mocks.board = {
+      me: { name: 'Me', workouts: [] },
+      friends: [
+        { ...ana, id: 'f1', name: 'Ana', error: 'unreachable', broken: null, workouts: [] },
+        { ...ana, id: 'f2', name: 'Beto', error: null, broken: 'chain', workouts: [wk('z', today(), 9999)] },
+      ],
+    }
+    await mount()
+    const text = [...host.querySelectorAll('.rpg-rank')].map(r => r.textContent)
+    expect(text.find(x => x.includes('Ana'))).toContain('Could not update')
+    expect(text.find(x => x.includes('Beto'))).toContain('History does not add up')
+    expect(text.find(x => x.includes('Beto'))).not.toContain('XP')
+  })
+
+  it('no ranking without friends', async () => {
+    await mount()
+    expect(host.querySelector('.rpg-rank')).toBeFalsy()
   })
 })

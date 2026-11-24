@@ -5939,4 +5939,7 @@ export default {
   "That is not a valid invite link.": "นี่ไม่ใช่ลิงก์คำเชิญที่ถูกต้อง",
   "Could not reach that server.": "เชื่อมต่อกับเซิร์ฟเวอร์นั้นไม่ได้",
   "That invite is yours. Send it to a friend.": "คำเชิญนี้เป็นของคุณเอง ส่งให้เพื่อนของคุณ",
+  "History does not add up": "ประวัติไม่ตรงกัน",
+  "Could not update": "อัปเดตไม่ได้",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "นับ 7 วันล่าสุด เวิร์กเอาต์ที่บันทึกช้าหรือแก้ไขภายหลังไม่ถูกนับ",
 }

@@ -5893,4 +5893,7 @@ export default {
   "That is not a valid invite link.": "Itu bukan tautan undangan yang valid.",
   "Could not reach that server.": "Tidak dapat menjangkau server itu.",
   "That invite is yours. Send it to a friend.": "Undangan itu milikmu. Kirimkan ke temanmu.",
+  "History does not add up": "Riwayat tidak cocok",
+  "Could not update": "Tidak bisa diperbarui",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Menghitung 7 hari terakhir. Latihan yang dicatat terlambat atau diubah setelahnya tidak dihitung.",
 };

@@ -423,6 +423,9 @@ export const PT_BR_OVERRIDES = {
   // --- rpg fork: character sheet; the rest (Aprendiz, Guerreiro, Campeão, Lenda, Atributos, {0} XP...) is the same in pt-BR ---
   "Badges": "Medalhas",
   "Next badge": "Próxima medalha",
+  "Could not update": "Não foi possível atualizar",
+  "History does not add up": "O histórico não bate",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Conta os últimos 7 dias. Treinos registrados tarde ou editados depois não contam.",
   "That invite is yours. Send it to a friend.": "Esse convite é seu. Envie para um amigo.",
   "Remove {0} from your friends?": "Remover {0} dos seus amigos?",
   "Valid for 48 hours and works once. Your friend pastes it under Friends, Add a friend.": "Válido por 48 horas e só funciona uma vez. Seu amigo cola em Amigos, Adicionar um amigo.",

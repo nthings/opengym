@@ -5928,4 +5928,7 @@ export default {
   "That is not a valid invite link.": "To nie jest prawidłowy link do zaproszenia.",
   "Could not reach that server.": "Nie można połączyć się z tym serwerem.",
   "That invite is yours. Send it to a friend.": "To twoje własne zaproszenie. Wyślij je znajomemu.",
+  "History does not add up": "Historia się nie zgadza",
+  "Could not update": "Nie udało się zaktualizować",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Liczy ostatnie 7 dni. Treningi zapisane z opóźnieniem lub później zmienione się nie liczą.",
 }

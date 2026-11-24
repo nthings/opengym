@@ -123,7 +123,8 @@ export function rpgState(S, today = todayISO()) {
     if (day === today) recent.today = DAY_XP + performance
     if (day >= weekFrom && day <= today) recent.week += DAY_XP + performance
   }
-  const bestStreak = workouts.length ? streakInfo(S, today).best : 0
+  const streak = workouts.length ? streakInfo(S, today) : { best: 0, current: 0 }
+  const bestStreak = streak.best
   const sources = { consistency, performance: performanceXp, streak: bestStreak * STREAK_WEEK_XP }
   const xp = sources.consistency + sources.performance + sources.streak
 
@@ -132,7 +133,7 @@ export function rpgState(S, today = todayISO()) {
     const value = Math.round(a.muscles.reduce((n, m) => n + (load[m] || 0), 0))
     return { id: a.id, title: a.title, value, ...attrLevelOf(value) }
   })
-  const stats = { workouts: workouts.length, days: days.size, volume, prs, bestStreak }
+  const stats = { workouts: workouts.length, days: days.size, volume, prs, bestStreak, streak: streak.current }
   const lv = levelOf(xp)
   const badges = BADGES.map(b => ({ id: b.id, title: b.title, have: stats[b.of], need: b.need, earned: stats[b.of] >= b.need }))
   return {

@@ -200,4 +200,11 @@ describe('rpgState', () => {
     const all = rpgState({ workouts: [] })
     expect(all.nextBadge.id).toBe('first-workout')
   })
+
+  it('the current streak is exposed next to the best one', () => {
+    const S = { workouts: ['2026-11-02', '2026-11-09', '2026-11-16'].map(d => workout(d, [{ id: '0025', sets: sets([0, 10]) }])) }
+    expect(rpgState(S, '2026-11-18').stats.streak).toBe(3)
+    expect(rpgState(S, '2026-12-30').stats.streak).toBe(0)
+    expect(rpgState({}, '2026-11-18').stats.streak).toBe(0)
+  })
 })

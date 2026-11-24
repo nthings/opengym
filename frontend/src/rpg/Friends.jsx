@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../lib/api.js'
+import { useStore } from '../store/useStore.js'
 import { t } from '../lib/i18n.js'
 import { copyText } from '../lib/clipboard.js'
 import Icon from '../components/Icon.jsx'
 import { Section, Row, Button, TextField } from '../components/ui.jsx'
 import { confirmSheet } from '../sheets.jsx'
+import { rankBoard } from './board.js'
 
 // RPG friends (module `rpg`, /rpg/friends): invite links and the friends list. The server side is
 // api/rpg/ (stage A: keys and invites; nothing about training moves yet).
@@ -30,12 +32,20 @@ export default function Friends() {
   const [text, setText] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const [board, setBoard] = useState(null)
+  const weekStart = useStore(s => s.S.weekStart)
+  const ranking = useMemo(() => rankBoard(board, undefined, { weekStart }), [board, weekStart])
 
   const load = useCallback(async () => {
     try {
       const s = await api('/api/rpg/status')
       setOn(!!s.on)
-      if (s.on) setFriends((await api('/api/rpg/friends')).friends || [])
+      if (s.on) {
+        const list = (await api('/api/rpg/friends')).friends || []
+        setFriends(list)
+        // The ranking is a bonus: a failure here must not hide the friends list.
+        setBoard(list.length ? await api('/api/rpg/board').catch(() => null) : null)
+      }
     } catch (e) { setOn(false); setError(errorText(e)) }
   }, [])
   useEffect(() => { load() }, [load])
@@ -69,6 +79,12 @@ export default function Friends() {
     {on === false && <div className="card muted">{t('Friends need a server with RPG switched on (RPG=on).')}</div>}
 
     {on && <>
+      {ranking.length > 1 && <Section title={t('This week')} footer={t('Counts the last 7 days. Workouts logged late or edited afterwards do not count.')}>
+        {ranking.map(r => <Row key={r.id} className="rpg-rank" icon={r.rank === 1 ? 'medal' : 'person'} iconTint={r.rank === 1 ? 'var(--yellow)' : 'var(--teal)'}
+          title={(r.rank ? r.rank + '. ' : '') + (r.me ? t('You') : r.name)}
+          subtitle={r.broken ? t('History does not add up') : r.error ? t('Could not update') : r.streak > 0 ? t('{0} week streak', r.streak) : null}
+          value={r.broken ? null : t('{0} XP', r.weekXp)} />)}
+      </Section>}
       <Section title={t('Friends')}>
         {friends.length === 0 && <div className="card muted">{t('No friends yet.')}</div>}
         {friends.map(f => <Row key={f.id} icon="person" iconTint="var(--teal)" title={f.name || hostOf(f.serverUrl)} subtitle={hostOf(f.serverUrl)}>

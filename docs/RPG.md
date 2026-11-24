@@ -42,7 +42,7 @@ grep -rn "rpg fork hook" frontend/src
 | `lib/modules-copy.js` | its title and description |
 | `App.jsx` | lazy imports and the `/rpg`, `/rpg/badges` and `/rpg/friends` routes |
 | `components/TabBar.jsx` | the RPG tab, and the call to `useLevelUp` (the "Level up!" toast, a no-op with the module off) |
-| `locales/*.js` | 29 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 2 overrides) |
+| `locales/*.js` | 33 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 2 overrides) |
 | tests | `components/TabBar.test.jsx` (RPG tab cases), `modules.test.js`, `views/Modules.test.jsx` (RPG off by default), `lib/pt-br-locale.test.js` (inheritance fingerprint) |
 
 If upstream adds a locale key at the end of a pack, the conflict is just two appended blocks: keep both.
@@ -72,13 +72,33 @@ moves yet: the signed log, the ranking and the flags are stages B and C
 (`docs/superpowers/specs/2026-11-23-rpg-friends-design.md`).
 
 Core hooks for it: `api/server.js` (import, `RPG` flags, the route spread, `rpg` in `/api/config`,
-deleting a profile's file), `api/Dockerfile` (`COPY rpg`), `api/openapi.yaml` and
+the signed log hook in `commitState`, deleting a profile's data), `api/Dockerfile` (`COPY rpg`), `api/openapi.yaml` and
 `scripts/build-api-docs.mjs` (docs), `api/test/openapi-routes.test.js` (route list), and the
 regenerated `website/api.html`. Find them with `grep -rn "rpg fork hook" api scripts`.
 
+## Weekly ranking (stage B)
+
+Once two profiles are friends, each one's server keeps a **signed, hash-chained log** of its
+workouts (`DATA_DIR/rpg/<userId>.log`, one JSON entry per line), appended after every state save
+(`rpg/log.js`, hooked from `commitState`). Only a profile that opened the friends screen has one.
+An entry is stamped with the **server's** clock and says: new workout, edited workout (flag
+`edited`), removed. A workout recorded more than 62 hours after its day (a day, a day of grace and
+14 hours of time zone slack) is `late`, one dated ahead is `future`: both are in the chain but do
+not count, so imported history never does. Entries carry only the day, name, exercises, sets
+(weight, reps, ticked, warm-up) and records: never notes, body weight or photos.
+
+A friend's server reads it with `GET /api/rpg/feed`, a request signed with its key (five minutes of
+slack, 120 a minute). `GET /api/rpg/board` fetches and verifies every friend's feed (at most every
+30 seconds, in-process for friends on the same server) and returns the last 120 days of workouts.
+A friend whose chain or signatures do not verify is `broken` for good (a restored backup looks the
+same: remove them and invite again) and is not ranked. The app computes the XP with the same
+`rpgState` as the sheet (`rpg/board.js`) and ranks XP of the last 7 days, then streak.
+
+Not yet (stage C): a friend's workouts to review, flagging one as doubtful, three flags unrank.
+
 ## Not built yet
 
-The signed workout log, the weekly ranking and the flags (stages B and C) are not built yet.
+Reviewing a friend's workouts, flagging doubtful ones and unranking after three flags (stage C).
 
 ## Android APK
 

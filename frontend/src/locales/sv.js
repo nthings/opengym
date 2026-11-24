@@ -5975,4 +5975,7 @@ export default {
   "That is not a valid invite link.": "Det är inte en giltig inbjudningslänk.",
   "Could not reach that server.": "Det gick inte att nå servern.",
   "That invite is yours. Send it to a friend.": "Den inbjudan är din egen. Skicka den till en vän.",
+  "History does not add up": "Historiken stämmer inte",
+  "Could not update": "Kunde inte uppdatera",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Räknar de senaste 7 dagarna. Pass som loggats för sent eller ändrats efteråt räknas inte.",
 }

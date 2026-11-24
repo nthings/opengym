@@ -6007,4 +6007,7 @@ export default {
   "That is not a valid invite link.": "এটি বৈধ আমন্ত্রণ লিংক নয়।",
   "Could not reach that server.": "ওই সার্ভারে পৌঁছানো যায়নি।",
   "That invite is yours. Send it to a friend.": "এটি আপনার নিজের আমন্ত্রণ। এটি কোনো বন্ধুকে পাঠান।",
+  "History does not add up": "ইতিহাস মিলছে না",
+  "Could not update": "আপডেট করা যায়নি",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "শেষ ৭ দিন গণনা হয়। দেরিতে লগ করা বা পরে সম্পাদনা করা ওয়ার্কআউট গণনা হয় না।",
 }

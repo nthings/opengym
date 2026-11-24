@@ -5928,4 +5928,7 @@ export default {
   "That is not a valid invite link.": "这不是有效的邀请链接。",
   "Could not reach that server.": "无法连接到该服务器。",
   "That invite is yours. Send it to a friend.": "这是你自己的邀请。请发给好友。",
+  "History does not add up": "历史记录对不上",
+  "Could not update": "无法更新",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "统计最近 7 天。补记得太晚或事后修改过的训练不计入。",
 }

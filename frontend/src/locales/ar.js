@@ -5983,4 +5983,7 @@ export default {
   "That is not a valid invite link.": "هذا ليس رابط دعوة صالحًا.",
   "Could not reach that server.": "تعذّر الوصول إلى ذلك الخادم.",
   "That invite is yours. Send it to a friend.": "هذه دعوتك أنت. أرسلها إلى صديق.",
+  "History does not add up": "السجل غير متطابق",
+  "Could not update": "تعذّر التحديث",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "يحسب آخر 7 أيام. التمارين المسجّلة متأخرًا أو المعدّلة لاحقًا لا تُحتسب.",
 }

@@ -5924,4 +5924,7 @@ export default {
   "That is not a valid invite link.": "Tai nėra tinkama kvietimo nuoroda.",
   "Could not reach that server.": "Nepavyko pasiekti to serverio.",
   "That invite is yours. Send it to a friend.": "Tai jūsų pačių kvietimas. Nusiųskite jį draugui.",
+  "History does not add up": "Istorija nesutampa",
+  "Could not update": "Nepavyko atnaujinti",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Skaičiuojamos paskutinės 7 dienos. Vėlai įrašytos ar vėliau pakeistos treniruotės neįskaičiuojamos.",
 }

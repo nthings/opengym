@@ -5894,4 +5894,7 @@ export default {
   "That is not a valid invite link.": "To není platný odkaz na pozvánku.",
   "Could not reach that server.": "K tomu serveru se nepodařilo připojit.",
   "That invite is yours. Send it to a friend.": "Tohle je vaše pozvánka. Pošlete ji příteli.",
+  "History does not add up": "Historie nesedí",
+  "Could not update": "Nepodařilo se aktualizovat",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Počítá se posledních 7 dní. Tréninky zapsané pozdě nebo později upravené se nepočítají.",
 }

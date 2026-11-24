@@ -5931,4 +5931,7 @@ export default {
   "That is not a valid invite link.": "Ez nem érvényes meghívólink.",
   "Could not reach that server.": "Nem érhető el az a szerver.",
   "That invite is yours. Send it to a friend.": "Ez a saját meghívód. Küldd el egy barátodnak.",
+  "History does not add up": "Az előzmények nem stimmelnek",
+  "Could not update": "Nem sikerült frissíteni",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Az utolsó 7 napot számolja. A későn rögzített vagy utólag módosított edzések nem számítanak.",
 }

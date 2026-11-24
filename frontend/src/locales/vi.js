@@ -5894,4 +5894,7 @@ export default {
   "That is not a valid invite link.": "Đây không phải liên kết lời mời hợp lệ.",
   "Could not reach that server.": "Không thể kết nối tới máy chủ đó.",
   "That invite is yours. Send it to a friend.": "Lời mời này là của bạn. Hãy gửi cho một người bạn.",
+  "History does not add up": "Lịch sử không khớp",
+  "Could not update": "Không thể cập nhật",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Tính 7 ngày gần nhất. Buổi tập ghi muộn hoặc chỉnh sửa sau đó không được tính.",
 };

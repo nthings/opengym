@@ -5894,4 +5894,7 @@ export default {
   "That is not a valid invite link.": "این پیوند دعوت معتبر نیست.",
   "Could not reach that server.": "به آن سرور دسترسی پیدا نشد.",
   "That invite is yours. Send it to a friend.": "این دعوت مال خودت است. آن را برای یک دوست بفرست.",
+  "History does not add up": "تاریخچه نمی‌خواند",
+  "Could not update": "به‌روزرسانی نشد",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "۷ روز گذشته حساب می‌شود. تمرین‌هایی که دیر ثبت یا بعداً ویرایش شده‌اند حساب نمی‌شوند.",
 }

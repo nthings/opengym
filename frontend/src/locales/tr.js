@@ -5928,4 +5928,7 @@ export default {
   "That is not a valid invite link.": "Bu geçerli bir davet bağlantısı değil.",
   "Could not reach that server.": "O sunucuya ulaşılamadı.",
   "That invite is yours. Send it to a friend.": "Bu davet senin. Bir arkadaşına gönder.",
+  "History does not add up": "Geçmiş tutarsız",
+  "Could not update": "Güncellenemedi",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Son 7 gün sayılır. Geç kaydedilen veya sonradan düzenlenen antrenmanlar sayılmaz.",
 }

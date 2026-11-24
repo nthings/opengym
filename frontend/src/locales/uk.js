@@ -5925,4 +5925,7 @@ export default {
   "That is not a valid invite link.": "Це недійсне посилання-запрошення.",
   "Could not reach that server.": "Не вдалося зв’язатися з цим сервером.",
   "That invite is yours. Send it to a friend.": "Це ваше власне запрошення. Надішліть його другові.",
+  "History does not add up": "Історія не сходиться",
+  "Could not update": "Не вдалося оновити",
+  "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Враховуються останні 7 днів. Тренування, внесені із запізненням або змінені пізніше, не зараховуються.",
 }
