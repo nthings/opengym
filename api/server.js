@@ -60,7 +60,7 @@ import { createBudgets, createCodeGuard } from './budgets.js';
 import { libraryConfig, publicLibraryConfig } from './library/config.js';
 import { createLibraryStore } from './library/store.js';
 import { libraryRoutes } from './library/routes.js';
-import { rpgRoutes } from './rpg/routes.js'; // rpg fork hook
+import { createRpg } from './rpg/index.js'; // rpg fork hook
 import { currentConsent } from './consent.js';
 import { oidcConfig } from './oidc/config.js';
 import { createProvider } from './oidc/provider.js';
@@ -117,6 +117,7 @@ const LIBRARY = libraryConfig(process.env);
 // friends on the home network (tests).
 const RPG = /^(1|true|yes|on)$/i.test(process.env.RPG || '');
 const RPG_ALLOW_LAN = /^(1|true|yes|on)$/i.test(process.env.RPG_ALLOW_LAN || '');
+let rpg = null; // set where the routes are built (below); commitState and user removal call it
 // Sign in with an identity provider (#130, docs/SELF_HOSTING.md): on once OIDC_ISSUER and
 // OIDC_CLIENT_ID are set. OIDC_ONLY makes the provider the one way in (admins keep their passkeys).
 const OIDC = oidcConfig(process.env, { origin: ORIGIN });
@@ -585,6 +586,8 @@ function commitState(uid, cur, state, { overRead = false, stamped = false } = {}
   // A finished workout, a record or a weigh-in the profile's integrations asked to hear about:
   // queued for delivery (integrations/outbox.js), never sent from inside this request.
   try { integrations.onStateWrite(uid, cur, state); } catch (e) { console.error('integrations onStateWrite', e); }
+  // The signed log of a profile that uses the RPG friends feature (rpg fork hook, rpg/log.js).
+  try { rpg?.onStateWrite(uid, state); } catch (e) { console.error('rpg onStateWrite', e); }
   return { status: 200, body: { ok: true, ts: state._ts || null, rev: curRev + 1, wid: state._wid } };
 }
 // Missed-workout nudge (nudge.js): opt-in on top of the reminder, so it needs everything the
@@ -1611,7 +1614,7 @@ function removeAccount(u) {
   // What they shared with the server stops being shared; copies others took stay theirs.
   try { library.removeUser(u.id); } catch (e) { console.error('library: could not withdraw items of', u.id, e.message); }
   // Their RPG keys and friends list (rpg fork hook); friends' copies of earlier data stay theirs.
-  try { fs.rmSync(path.join(DATA, 'rpg', u.id + '.json'), { force: true }); } catch (e) { console.error('rpg: could not remove', u.id, e.message); }
+  try { rpg?.removeUser(u.id); } catch (e) { console.error('rpg: could not remove', u.id, e.message); }
   saveDb();
 }
 
@@ -3635,7 +3638,7 @@ const routes = {
 
   /* ---------- RPG friends (fork) ---------- */
   // rpg/routes.js; with RPG off they answer 404 'rpg-off' (the status route always answers).
-  ...rpgRoutes({ json, readBody, readSession, dataDir: DATA, origin: ORIGIN, enabled: RPG, allowLan: RPG_ALLOW_LAN, nameOf: id => db.users.find(u => u.id === id)?.name || '' }),
+  ...(rpg = createRpg({ json, readBody, readSession, dataDir: DATA, origin: ORIGIN, enabled: RPG, allowLan: RPG_ALLOW_LAN, nameOf: id => db.users.find(u => u.id === id)?.name || '' })).routes,
 
   /* ---------- photos & videos ---------- */
   // Absent, not refusing, when MEDIA_UPLOADS=0: a 404 is what a server from before the feature

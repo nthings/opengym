@@ -5,15 +5,22 @@
  * and a rate limit, and it answers the same way for a wrong, used or expired token. */
 import { outboundUrlError } from '../net-guard.js';
 import { rpgStore } from './store.js';
-import { makePost } from './http.js';
+import { createLogStore, materialize } from './log.js';
+import { makeClient } from './http.js';
+import { signRequest, checkRequest, serveFeed, PAGE } from './feed.js';
+import { refreshFriend, recentWorkouts, prune, STALE_MS } from './board.js';
 import { createInvite, consumeInvite, addFriend, removeFriend, parseInviteLink } from './friends.js';
 
 const KEY_RE = /^[A-Za-z0-9_-]{43}$/;
 const ACCEPT_MAX = 30; // per minute, for the whole server
 
-export function rpgRoutes({ json, readBody, readSession, dataDir, origin, enabled, allowLan = false, post = null, now = Date.now, nameOf = null }) {
-  const store = rpgStore(dataDir);
-  const send = post || makePost({ allowLan });
+export function rpgRoutes({ json, readBody, readSession, dataDir, origin, enabled, allowLan = false, post = null, get = null, now = Date.now, nameOf = null, store: store0 = null, log: log0 = null, feedPage = PAGE }) {
+  const store = store0 || rpgStore(dataDir);
+  const log = log0 || createLogStore(dataDir);
+  const net = post && get ? null : makeClient({ allowLan });
+  const send = post || net.post;
+  const fetchRemote = get || net.get;
+  const feedHits = new Map();
   const base = String(origin).replace(/\/$/, '');
   const off = res => json(res, 404, { error: 'the RPG friends feature is off on this server', code: 'rpg-off' });
   const attempts = [];
@@ -98,6 +105,51 @@ export function rpgRoutes({ json, readBody, readSession, dataDir, origin, enable
       const r = acceptInvite(body);
       json(res, r.status, r.body);
     },
+
+    // A friend's server reads this profile's signed log. No session: the signature is the proof.
+    'GET /api/rpg/feed': async (req, res) => {
+      if (!enabled) return off(res);
+      const u = new URL(req.url, 'http://x');
+      const t = now();
+      const chk = checkRequest(req.headers || {}, u.pathname + u.search, t);
+      if (!chk.ok) return json(res, 401, { error: 'bad signature', code: 'bad-signature' });
+      const hits = (feedHits.get(chk.from) || []).filter(x => x > t - 60000);
+      if (hits.length >= 120) return json(res, 429, { error: 'slow down a little', code: 'rate-limited' }, { 'Retry-After': '60' });
+      hits.push(t); feedHits.set(chk.from, hits);
+      const since = Math.max(0, parseInt(u.searchParams.get('since') || '0', 10) || 0);
+      const out = serveFeed({ store, log, from: chk.from, to: chk.to, since, limit: feedPage });
+      if (!out) return json(res, 404, { error: 'no such friend', code: 'not-friends' });
+      json(res, 200, out);
+    },
+
+    // The ranking's raw material: my counted workouts and each friend's, fetched and verified.
+    'GET /api/rpg/board': guard(async (req, res, user) => {
+      const t = now();
+      const doc = store.load(user.id);
+      const live = new Set(doc.friends.map(f => f.id));
+      for (const k of Object.keys(doc.cache)) if (!live.has(k)) delete doc.cache[k];
+      await Promise.all(doc.friends.filter(f => t - (doc.cache[f.id]?.fetchedAt || 0) >= STALE_MS).map(f => {
+        const path = since => `/api/rpg/feed?since=${since}`;
+        const fetchFeed = f.serverUrl === base
+          ? async since => {
+            const body = serveFeed({ store, log, from: doc.keys.publicKey, to: f.publicKey, since, limit: feedPage });
+            return body ? { status: 200, body } : { status: 404, body: { code: 'not-friends' } };
+          }
+          : since => fetchRemote(f.serverUrl + path(since), signRequest(doc.keys, { to: f.publicKey, path: path(since), now: t }));
+        return refreshFriend({ doc, friend: f, fetchFeed, now: t }).then(c => prune(c, t));
+      }));
+      // Another request may have added or removed a friend meanwhile: keep its list, our cache.
+      const fresh = store.load(user.id);
+      fresh.cache = Object.fromEntries(fresh.friends.filter(f => doc.cache[f.id]).map(f => [f.id, doc.cache[f.id]]));
+      store.save(user.id, fresh);
+      json(res, 200, {
+        me: { name: user.name || '', workouts: recentWorkouts(materialize(log.read(user.id)), t) },
+        friends: fresh.friends.map(f => {
+          const c = fresh.cache[f.id];
+          return { id: f.id, name: f.name, serverUrl: f.serverUrl, fetchedAt: c?.fetchedAt || 0, error: c?.error || null, broken: c?.broken || null, workouts: c ? recentWorkouts(c.workouts, t) : [] };
+        }),
+      });
+    }),
 
     'POST /api/rpg/remove': guard(async (req, res, user) => {
       const body = await readBody(req);

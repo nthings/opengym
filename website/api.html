@@ -332,7 +332,7 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
   <p class="api-facts">
     <span>OpenAPI 3.1.0</span>
     <span>openGym v1.4.5</span>
-    <span>183 endpoints</span>
+    <span>185 endpoints</span>
     <span>AGPL-3.0-or-later</span>
   </p>
 
@@ -3708,6 +3708,76 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
   <div class="prow rrow">
     <span class="r-code s2">200</span>
     <span class="p-desc">The flag.<span class="r-sig">{ on: boolean }</span></span>
+  </div>
+    </div>
+  </div>
+</details>
+
+<details class="ep" id="op-rpgFeed">
+  <summary>
+    <span class="m get">GET</span>
+    <span class="ep-path"><code>/api/rpg/feed</code><span class="ep-chip public">public</span></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">A friend's server reads this profile's signed workout log (server to server)</span>
+  </summary>
+  <div class="ep-body">
+<p>Not for the app: no session, a signed request. <code>X-Rpg-Key</code> is the asker's public key, <code>X-Rpg-To</code> the public key of the profile asked about, <code>X-Rpg-Ts</code> the time in epoch ms (five minutes of slack) and <code>X-Rpg-Sig</code> an Ed25519 signature of <code>GET\n&lt;path and query&gt;\n&lt;to&gt;\n&lt;ts&gt;</code>. Answers only when the asker is one of that profile's friends; anything else is <code>bad-signature</code> (401) or <code>not-friends</code> (404). Each entry is chained to the one before by its hash and signed, so the asker can tell a history that was rewritten. <code>more</code> says another page follows.</p>
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Public: no authentication required.</span></p>
+<p class="ep-h">Query parameters</p><div class="ptab">
+  <div class="prow">
+    <span class="p-name">since</span>
+    <span class="p-type">integer <span class="p-hint">(0&ndash;, default 0)</span></span>
+    <span class="p-desc">Last sequence number already held; entries after it are returned.</span>
+  </div>
+</div>
+
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">A page of the log.<span class="r-sig">{ publicKey: string, entries: object[], head: object, more: boolean }</span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">401</span>
+    <span class="p-desc">bad-signature.</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">404</span>
+    <span class="p-desc">not-friends, or the feature is off (rpg-off).</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">429</span>
+    <span class="p-desc">Too many requests.</span>
+  </div>
+    </div>
+  </div>
+</details>
+
+<details class="ep" id="op-rpgBoard">
+  <summary>
+    <span class="m get">GET</span>
+    <span class="ep-path"><code>/api/rpg/board</code></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">My workouts and my friends' workouts, fetched and verified, for the weekly ranking</span>
+  </summary>
+  <div class="ep-body">
+<p>Fetches each friend's feed (at most every 30 seconds), checks the chain and signatures and answers the workouts of the last 120 days with their <code>flag</code> (<code>''</code> counts; <code>late</code>, <code>future</code> and <code>edited</code> do not). A friend whose history does not add up is <code>broken</code> for good; one that cannot be reached or no longer lists this profile has an <code>error</code> (<code>unreachable</code>, <code>not-friends</code>, <code>refused</code>). The app turns the workouts into XP.</p>
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Requires a session: the cookie set at sign-in, or <code>Authorization: Bearer &lt;token&gt;</code> from mobile-app pairing.</span></p>
+
+
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">The raw material of the ranking.<span class="r-sig">{ me: object, friends: object[] }</span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">401</span>
+    <span class="p-desc">No session, expired/revoked session, or a disabled account.<span class="r-sig"><code>{&quot;error&quot;:&quot;not signed in&quot;}</code></span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">404</span>
+    <span class="p-desc">The feature is off (code rpg-off).</span>
   </div>
     </div>
   </div>

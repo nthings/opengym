@@ -37,11 +37,14 @@ export function rpgStore(dataDir) {
     if (!doc || !doc.keys?.publicKey || !doc.keys?.privateKey) throw new Error('rpg file unreadable: ' + path.basename(file));
     doc.friends = Array.isArray(doc.friends) ? doc.friends : [];
     doc.invites = Array.isArray(doc.invites) ? doc.invites : [];
+    doc.cache = doc.cache && typeof doc.cache === 'object' && !Array.isArray(doc.cache) ? doc.cache : {};
     return doc;
   }
 
   /** Every profile id that has a file, for the one route that has no session (accept). */
+  const has = uid => fs.existsSync(fileOf(uid));
+
   const ids = () => { try { return fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f => f.slice(0, -5)); } catch { return []; } };
 
-  return { load, save, ids };
+  return { load, save, ids, has };
 }

@@ -3260,6 +3260,64 @@ paths:
                 properties:
                   on: { type: boolean }
 
+  /api/rpg/feed:
+    get:
+      tags: [rpg]
+      operationId: rpgFeed
+      summary: A friend's server reads this profile's signed workout log (server to server)
+      description: |
+        Not for the app: no session, a signed request. `X-Rpg-Key` is the asker's public key,
+        `X-Rpg-To` the public key of the profile asked about, `X-Rpg-Ts` the time in epoch ms (five
+        minutes of slack) and `X-Rpg-Sig` an Ed25519 signature of `GET\n<path and query>\n<to>\n<ts>`.
+        Answers only when the asker is one of that profile's friends; anything else is `bad-signature`
+        (401) or `not-friends` (404). Each entry is chained to the one before by its hash and signed, so
+        the asker can tell a history that was rewritten. `more` says another page follows.
+      security: []
+      parameters:
+        - name: since
+          in: query
+          description: Last sequence number already held; entries after it are returned.
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        '200':
+          description: A page of the log.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  publicKey: { type: string }
+                  entries: { type: array, items: { type: object } }
+                  head: { type: object, properties: { seq: { type: integer }, hash: { type: string } } }
+                  more: { type: boolean }
+        '401': { description: 'bad-signature.' }
+        '404': { description: 'not-friends, or the feature is off (rpg-off).' }
+        '429': { description: Too many requests. }
+
+  /api/rpg/board:
+    get:
+      tags: [rpg]
+      operationId: rpgBoard
+      summary: My workouts and my friends' workouts, fetched and verified, for the weekly ranking
+      description: |
+        Fetches each friend's feed (at most every 30 seconds), checks the chain and signatures and
+        answers the workouts of the last 120 days with their `flag` (`''` counts; `late`, `future`
+        and `edited` do not). A friend whose history does not add up is `broken` for good; one that
+        cannot be reached or no longer lists this profile has an `error` (`unreachable`,
+        `not-friends`, `refused`). The app turns the workouts into XP.
+      responses:
+        '200':
+          description: The raw material of the ranking.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  me: { type: object }
+                  friends: { type: array, items: { type: object } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { description: 'The feature is off (code rpg-off).' }
+
   /api/rpg/friends:
     get:
       tags: [rpg]
