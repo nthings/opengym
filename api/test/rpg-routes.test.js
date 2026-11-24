@@ -82,6 +82,17 @@ test('two profiles on the same server can be friends, with no network call', asy
   assert.equal((await a.call('POST /api/rpg/add', { link }, { user: { id: 'u3', name: 'Cris' } })).body.code, 'invite-invalid');
 });
 
+test('same-server friends need no address check: a LAN origin works without RPG_ALLOW_LAN', async () => {
+  const lan = makeNode('Ana', 'http://192.168.1.5:8092');
+  const link = (await lan.call('POST /api/rpg/invite')).body.link;
+  const add = await lan.call('POST /api/rpg/add', { link }, { user: { id: 'u2', name: 'Beto' } });
+  assert.equal(add.code, 200);
+  assert.equal(add.body.friend.name, 'Ana');
+  // Another server on the LAN still is not reachable without it.
+  const b = makeNode('Beto', B_URL);
+  assert.equal((await b.call('POST /api/rpg/add', { link })).body.code, 'bad-address');
+});
+
 test('adding yourself is refused', async () => {
   const a = makeNode('Ana', A_URL);
   const link = (await a.call('POST /api/rpg/invite')).body.link;

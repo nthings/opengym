@@ -66,7 +66,8 @@ export function rpgRoutes({ json, readBody, readSession, dataDir, origin, enable
       const body = await readBody(req);
       const link = parseInviteLink(body?.link);
       if (!link) return json(res, 400, { error: 'that is not an invite link', code: 'bad-link' });
-      if (outboundUrlError(link.base, { allowLan })) return json(res, 400, { error: 'that address is not allowed', code: 'bad-address' });
+      // Only a call to another server is judged by address; the same server is no call at all.
+      if (link.base !== base && outboundUrlError(link.base, { allowLan })) return json(res, 400, { error: 'that address is not allowed', code: 'bad-address' });
       const doc = store.load(user.id);
       const mine = { token: link.token, publicKey: doc.keys.publicKey, serverUrl: base, name: user.name || '' };
       let r;
