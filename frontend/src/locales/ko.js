@@ -5931,4 +5931,11 @@ export default {
   "History does not add up": "기록이 맞지 않습니다",
   "Could not update": "업데이트할 수 없습니다",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "최근 7일을 집계합니다. 늦게 기록했거나 나중에 수정한 운동은 포함되지 않습니다.",
+  "Flag": "표시",
+  "Unflag": "표시 해제",
+  "Too many flagged workouts": "표시된 운동이 너무 많습니다",
+  "{0} flagged workout": "운동 {0}개 표시됨",
+  "{0} flagged workouts": "운동 {0}개 표시됨",
+  "No workouts this week.": "이번 주 운동이 없습니다.",
+  "Edited afterwards": "나중에 수정됨",
 }

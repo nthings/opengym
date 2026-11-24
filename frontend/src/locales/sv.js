@@ -5978,4 +5978,11 @@ export default {
   "History does not add up": "Historiken stämmer inte",
   "Could not update": "Kunde inte uppdatera",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Räknar de senaste 7 dagarna. Pass som loggats för sent eller ändrats efteråt räknas inte.",
+  "Flag": "Markera",
+  "Unflag": "Ta bort markering",
+  "Too many flagged workouts": "För många markerade pass",
+  "{0} flagged workout": "{0} markerat pass",
+  "{0} flagged workouts": "{0} markerade pass",
+  "No workouts this week.": "Inga pass den här veckan.",
+  "Edited afterwards": "Ändrat i efterhand",
 }

@@ -3294,6 +3294,38 @@ paths:
         '404': { description: 'not-friends, or the feature is off (rpg-off).' }
         '429': { description: Too many requests. }
 
+  /api/rpg/flag:
+    post:
+      tags: [rpg]
+      operationId: rpgFlag
+      summary: Flag a friend's workout as doubtful, or take the flag back
+      description: |
+        A flag is mine alone: the workout stops counting in my ranking and stays on their server,
+        never sent to them. Their workout is still returned by the board so it can be reviewed and
+        unflagged. Flagging three or more of a friend's workouts in the week leaves them unranked.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id, wid]
+              properties:
+                id: { type: string, description: The friend's id. }
+                wid: { type: string, description: The workout's id, as the board returned it. }
+                on: { type: boolean, default: true, description: 'False takes the flag back.' }
+      responses:
+        '200':
+          description: The flags left on that friend.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flags: { type: array, items: { type: string } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { description: 'not-friends, no-workout, or the feature is off (rpg-off).' }
+
   /api/rpg/board:
     get:
       tags: [rpg]
@@ -3304,7 +3336,9 @@ paths:
         answers the workouts of the last 120 days with their `flag` (`''` counts; `late`, `future`
         and `edited` do not). A friend whose history does not add up is `broken` for good; one that
         cannot be reached or no longer lists this profile has an `error` (`unreachable`,
-        `not-friends`, `refused`). The app turns the workouts into XP.
+        `not-friends`, `refused`). `flags` are the workouts I marked doubtful (they stop counting for
+        me) and `unit` is the friend's own weight unit (`kg` or `lb`), so the app can compare fairly.
+        The app turns the workouts into XP.
       responses:
         '200':
           description: The raw material of the ranking.

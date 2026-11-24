@@ -5931,4 +5931,11 @@ export default {
   "History does not add up": "L’historique ne concorde pas",
   "Could not update": "Mise à jour impossible",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Compte les 7 derniers jours. Les séances saisies en retard ou modifiées après coup ne comptent pas.",
+  "Flag": "Signaler",
+  "Unflag": "Retirer le signalement",
+  "Too many flagged workouts": "Trop de séances signalées",
+  "{0} flagged workout": "{0} séance signalée",
+  "{0} flagged workouts": "{0} séances signalées",
+  "No workouts this week.": "Aucune séance cette semaine.",
+  "Edited afterwards": "Modifiée après coup",
 }

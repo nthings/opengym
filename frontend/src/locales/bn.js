@@ -6010,4 +6010,11 @@ export default {
   "History does not add up": "ইতিহাস মিলছে না",
   "Could not update": "আপডেট করা যায়নি",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "শেষ ৭ দিন গণনা হয়। দেরিতে লগ করা বা পরে সম্পাদনা করা ওয়ার্কআউট গণনা হয় না।",
+  "Flag": "চিহ্নিত করুন",
+  "Unflag": "চিহ্ন সরান",
+  "Too many flagged workouts": "অনেক ওয়ার্কআউট চিহ্নিত",
+  "{0} flagged workout": "{0}টি ওয়ার্কআউট চিহ্নিত",
+  "{0} flagged workouts": "{0}টি ওয়ার্কআউট চিহ্নিত",
+  "No workouts this week.": "এই সপ্তাহে কোনো ওয়ার্কআউট নেই।",
+  "Edited afterwards": "পরে সম্পাদিত",
 }

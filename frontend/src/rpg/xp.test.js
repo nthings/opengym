@@ -187,8 +187,9 @@ describe('rpgState', () => {
       workout('2026-11-10', [{ id: '0025', sets: sets([200, 10]) }]), // 70
     ] }
     const s = rpgState(S, '2026-11-10')
-    expect(s.recent).toEqual({ today: 70, week: 60 + 70 })
-    expect(rpgState({}, '2026-11-10').recent).toEqual({ today: 0, week: 0 })
+    expect({ today: s.recent.today, week: s.recent.week }).toEqual({ today: 70, week: 60 + 70 })
+    expect(s.recent.from).toBe('2026-11-04')
+    expect({ today: rpgState({}, '2026-11-10').recent.today, week: rpgState({}, '2026-11-10').recent.week }).toEqual({ today: 0, week: 0 })
   })
 
   it('badges carry their progress, and the next one to chase is named', () => {

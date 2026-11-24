@@ -2,7 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../lib/api.js'
 import { useStore } from '../store/useStore.js'
-import { t } from '../lib/i18n.js'
+import { useUI } from '../store/useUI.js'
+import { t, tn } from '../lib/i18n.js'
+import { fmtDate, fmtNum } from '../lib/format.js'
+import { exOr } from '../lib/exercises.js'
 import { copyText } from '../lib/clipboard.js'
 import Icon from '../components/Icon.jsx'
 import { Section, Row, Button, TextField } from '../components/ui.jsx'
@@ -22,6 +25,51 @@ const errorText = e => {
         : t('Could not reach that server.')
 }
 const hostOf = url => { try { return new URL(url).host } catch { return url } }
+// A friend's sets as a friend reads them: "100 × 10 · 90 × 8". Cardio keeps no weight or reps here.
+const setLine = s => [s.w > 0 ? fmtNum(s.w) : null, s.r > 0 ? fmtNum(s.r) : null].filter(Boolean).join(' × ')
+
+// One friend's week: what they logged, so a doubtful workout can be flagged (it stops counting for
+// me and stays on their server). The sheet keeps its own flag list; the board behind is reloaded.
+function FriendDetail({ friend, from, close, onChanged }) {
+  const [flags, setFlags] = useState(friend.flags || [])
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const workouts = (friend.workouts || []).filter(w => w.workout && w.workout.d >= from)
+  const toggle = async (wid, on) => {
+    setBusy(true); setError('')
+    try {
+      setFlags((await api('/api/rpg/flag', { method: 'POST', body: JSON.stringify({ id: friend.id, wid, on }) })).flags || [])
+      await onChanged()
+    } catch (e) { setError(errorText(e)) }
+    setBusy(false)
+  }
+  return <>
+    <div className="row between" style={{ marginBottom: 6 }}>
+      <h3 style={{ marginBottom: 0 }}>{friend.name}</h3>
+      <button className="iconbtn" aria-label={t('Close')} onClick={close}><Icon name="xmark" /></button>
+    </div>
+    <div className="muted small" style={{ marginBottom: 10 }}>{t('Counts the last 7 days. Workouts logged late or edited afterwards do not count.')}</div>
+    {workouts.length === 0 && <div className="card muted">{t('No workouts this week.')}</div>}
+    {workouts.map(w => {
+      const on = flags.includes(w.wid)
+      return <div key={w.wid} className="card rpg-friend-workout" style={{ marginBottom: 8, opacity: on ? 0.55 : 1 }}>
+        <div className="row between">
+          <div>
+            <b>{w.workout.name || t('Workout')}</b>{' '}
+            <span className="muted small">{fmtDate(w.workout.d)} · {friend.unit || 'kg'}</span>
+          </div>
+          <Button size="sm" variant={on ? 'primary' : 'ghost'} disabled={busy} onClick={() => toggle(w.wid, !on)}>{on ? t('Unflag') : t('Flag')}</Button>
+        </div>
+        {w.flag === 'edited' && <div className="small" style={{ color: 'var(--yellow)' }}>{t('Edited afterwards')}</div>}
+        {w.workout.entries.map((e, i) => <div key={i} className="small" style={{ marginTop: 4 }}>
+          <span className="muted">{exOr(e.id).n}</span>{' '}
+          {e.sets.filter(s => s.done && !s.warmup && s.phase !== 'warmup').map(setLine).filter(Boolean).join(' · ') || t('Done')}
+        </div>)}
+      </div>
+    })}
+    {error && <div className="card" role="alert" style={{ color: 'var(--red)' }}>{error}</div>}
+  </>
+}
 
 export default function Friends() {
   const nav = useNavigate()
@@ -34,7 +82,8 @@ export default function Friends() {
   const [busy, setBusy] = useState(false)
   const [board, setBoard] = useState(null)
   const weekStart = useStore(s => s.S.weekStart)
-  const ranking = useMemo(() => rankBoard(board, undefined, { weekStart }), [board, weekStart])
+  const unit = useStore(s => s.S.unit)
+  const ranking = useMemo(() => rankBoard(board, undefined, { weekStart, unit }), [board, weekStart, unit])
 
   const load = useCallback(async () => {
     try {
@@ -64,6 +113,11 @@ export default function Friends() {
     } catch (e) { setError(errorText(e)) }
     setBusy(false)
   }
+  const openFriend = r => {
+    const f = (board?.friends || []).find(x => x.id === r.id)
+    if (!f) return
+    useUI.getState().openSheet(close => <FriendDetail friend={f} from={r.from} close={close} onChanged={load} />)
+  }
   const remove = f => confirmSheet({
     title: t('Remove friend'), message: t('Remove {0} from your friends?', f.name || hostOf(f.serverUrl)),
     confirmText: t('Remove'), danger: true,
@@ -82,8 +136,9 @@ export default function Friends() {
       {ranking.length > 1 && <Section title={t('This week')} footer={t('Counts the last 7 days. Workouts logged late or edited afterwards do not count.')}>
         {ranking.map(r => <Row key={r.id} className="rpg-rank" icon={r.rank === 1 ? 'medal' : 'person'} iconTint={r.rank === 1 ? 'var(--yellow)' : 'var(--teal)'}
           title={(r.rank ? r.rank + '. ' : '') + (r.me ? t('You') : r.name)}
-          subtitle={r.broken ? t('History does not add up') : r.error ? t('Could not update') : r.streak > 0 ? t('Streak') + ': ' + r.streak : null}
-          value={r.broken ? null : t('{0} XP', r.weekXp)} />)}
+          subtitle={r.broken ? t('History does not add up') : r.disqualified ? t('Too many flagged workouts') : r.error ? t('Could not update') : r.flags ? tn('{0} flagged workout', '{0} flagged workouts', r.flags) : r.streak > 0 ? t('Streak') + ': ' + r.streak : null}
+          value={r.broken || r.disqualified ? null : t('{0} XP', r.weekXp)}
+          onClick={r.me ? undefined : () => openFriend(r)} accessory={r.me ? 'none' : 'chevron'} />)}
       </Section>}
       <Section title={t('Friends')}>
         {friends.length === 0 && <div className="card muted">{t('No friends yet.')}</div>}

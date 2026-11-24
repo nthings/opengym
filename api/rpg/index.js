@@ -17,7 +17,13 @@ export function createRpg(opts) {
     /** After a profile's state was saved. Only profiles that opened the feature have a log. */
     onStateWrite(uid, state) {
       if (!enabled || !store.has(uid)) return;
-      syncLog({ store: log, uid, keys: store.load(uid).keys, workouts: state?.workouts, now: now() });
+      const doc = store.load(uid);
+      // The unit travels with the feed: 100 lb must not rank as 100 kg.
+      const unit = state?.unit === 'lb' ? 'lb' : 'kg';
+      const changed = doc.unit !== unit;
+      if (changed) doc.unit = unit;
+      syncLog({ store: log, uid, keys: doc.keys, workouts: state?.workouts, now: now() });
+      if (changed) store.save(uid, doc);
     },
     /** A deleted profile takes its keys, friends and log with it. */
     removeUser(uid) {

@@ -5941,4 +5941,11 @@ export default {
   "History does not add up": "La cronologia non torna",
   "Could not update": "Impossibile aggiornare",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Conta gli ultimi 7 giorni. Gli allenamenti registrati in ritardo o modificati dopo non contano.",
+  "Flag": "Segnala",
+  "Unflag": "Annulla segnalazione",
+  "Too many flagged workouts": "Troppi allenamenti segnalati",
+  "{0} flagged workout": "{0} allenamento segnalato",
+  "{0} flagged workouts": "{0} allenamenti segnalati",
+  "No workouts this week.": "Nessun allenamento questa settimana.",
+  "Edited afterwards": "Modificato dopo",
 }

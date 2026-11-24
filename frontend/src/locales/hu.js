@@ -5934,4 +5934,11 @@ export default {
   "History does not add up": "Az előzmények nem stimmelnek",
   "Could not update": "Nem sikerült frissíteni",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Az utolsó 7 napot számolja. A későn rögzített vagy utólag módosított edzések nem számítanak.",
+  "Flag": "Megjelölés",
+  "Unflag": "Jelölés törlése",
+  "Too many flagged workouts": "Túl sok megjelölt edzés",
+  "{0} flagged workout": "{0} megjelölt edzés",
+  "{0} flagged workouts": "{0} megjelölt edzés",
+  "No workouts this week.": "Ezen a héten nincs edzés.",
+  "Edited afterwards": "Utólag módosítva",
 }

@@ -15,6 +15,7 @@ import { loadOfWorkouts } from '../lib/muscles.js'
 import { exOr } from '../lib/exercises.js'
 import { workoutAt } from '../lib/history.js'
 import { isWarmupRow } from '../lib/workout-model.js'
+import { LB_PER_KG } from '../lib/calculators.js'
 
 export const DAY_XP = 50
 export const KG_PER_XP = 100
@@ -87,6 +88,8 @@ export function attrLevelOf(value) {
  */
 export function rpgState(S, today = todayISO()) {
   const workouts = (Array.isArray(S?.workouts) ? S.workouts : []).filter(w => w && typeof w === 'object')
+  // Volume is always kg here: a profile in pounds must not earn 2.2x the XP for the same work.
+  const wf = S?.unit === 'lb' ? 1 / LB_PER_KG : 1
   const days = new Map() // day -> { volume, prs, stretch, worked }
   for (const w of workouts) {
     const day = dayOf(w)
@@ -98,7 +101,7 @@ export function rpgState(S, today = todayISO()) {
         if (!s?.done || isWarmupRow(s)) continue
         worked = true
         d.worked = true
-        d.volume += num(s.w) * num(s.r)
+        d.volume += num(s.w) * num(s.r) * wf
       }
       if (worked && STRETCH_CATS.includes(exOr(e.id)?.cat)) d.stretch = true
     }
@@ -112,7 +115,7 @@ export function rpgState(S, today = todayISO()) {
   let performanceXp = 0
   let volume = 0
   let prs = 0
-  const recent = { today: 0, week: 0 }
+  const recent = { today: 0, week: 0, from: weekFrom }
   for (const [day, d] of days) {
     if (!d.worked) { days.delete(day); continue } // nothing ticked off: showing up needs a set
     const performance = Math.min(DAY_PERFORMANCE_CAP, Math.floor(d.volume / KG_PER_XP) + d.prs * PR_XP + (d.stretch ? STRETCH_XP : 0))

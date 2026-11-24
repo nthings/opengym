@@ -46,4 +46,37 @@ describe('rankBoard', () => {
     expect(rankBoard({ me: { name: 'Me', workouts: [] }, friends: [] }, TODAY)[0].weekXp).toBe(0)
     expect(rankBoard(null, TODAY)).toEqual([])
   })
+
+  it('a flagged workout stops counting for me, and three flags leave the friend unranked', () => {
+    const one = friend('f1', 'Ana', [wk('a', '2026-11-23'), wk('b', '2026-11-22'), wk('c', '2026-11-21')])
+    let b = rankBoard({ me: { name: 'Me', workouts: [] }, friends: [{ ...one, flags: ['a'] }] }, TODAY)
+    expect(b[0].weekXp).toBe(120) // 60 + 60, the flagged one gone
+    expect(b[0].flags).toBe(1)
+    expect(b[0].rank).toBe(1)
+    b = rankBoard({ me: { name: 'Me', workouts: [wk('m', '2026-11-23')] }, friends: [{ ...one, flags: ['a', 'b', 'c'] }] }, TODAY)
+    expect(b.map(r => [r.name, r.rank])).toEqual([['Me', 1], ['Ana', null]])
+    expect(b[1].disqualified).toBe(true)
+    expect(b[1].weekXp).toBe(0)
+  })
+
+  it('flags from older weeks do not unrank anyone, and unknown ids are ignored', () => {
+    const b = rankBoard({
+      me: { name: 'Me', workouts: [] },
+      friends: [friend('f1', 'Ana', [wk('a', '2026-11-23'), wk('old', '2026-10-01')], { flags: ['old', 'gone'] })],
+    }, TODAY)
+    expect(b[0].disqualified).toBe(false)
+    expect(b[0].flags).toBe(0)
+    expect(b[0].weekXp).toBe(60)
+  })
+
+  it('weighs a friend in pounds as kilos, so 225 lb is not worth more than 100 kg', () => {
+    const b = rankBoard({
+      me: { name: 'Me', workouts: [] },
+      friends: [
+        friend('f1', 'Lb', [{ ...wk('a', '2026-11-23', 225), workout: { id: 'a', d: '2026-11-23', name: 'x', entries: [{ id: '0025', sets: [{ w: 225, r: 10, done: true }] }], prs: [] } }], { unit: 'lb' }),
+        friend('f2', 'Kg', [wk('b', '2026-11-23', 100)], { unit: 'kg' }),
+      ],
+    }, TODAY, { unit: 'kg' })
+    expect(b.filter(r => !r.me).map(r => [r.name, r.weekXp])).toEqual([['Kg', 60], ['Lb', 60]])
+  })
 })

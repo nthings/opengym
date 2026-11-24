@@ -38,7 +38,7 @@ function makeNode(name, origin, { page = 500, users = null } = {}) {
     now: () => clock.now, nameOf: uid => node.users[uid] || name, feedPage: page,
   });
   node.call = async (key, body, extra = {}) => { const res = {}; await node.rpg.routes[key]({ body, headers: {}, ...extra }, res); return res; };
-  node.save = (uid, workouts) => node.rpg.onStateWrite(uid, { workouts });
+  node.save = (uid, workouts, unit = 'kg') => node.rpg.onStateWrite(uid, { workouts, unit });
   nodes[origin] = node;
   return node;
 }
@@ -177,4 +177,47 @@ test('a profile that never opened the feature has no log, and off answers rpg-of
     assert.equal(res.body.code, 'rpg-off', key);
   }
   assert.doesNotThrow(() => off.onStateWrite('u1', { workouts: [] }));
+});
+
+test('flagging a friend workout keeps it on their server and out of my ranking', async () => {
+  const a = makeNode('Ana', A), b = makeNode('Beto', B);
+  await befriend(a, b);
+  a.save('u1', [wk('w1', '2026-11-23'), wk('w2', '2026-11-22')]);
+  const f = (await board(b)).friends[0];
+  const flag = async (body) => (await b.call('POST /api/rpg/flag', body)).code;
+  assert.equal(await flag({ id: f.id, wid: 'w1' }), 200);
+  const after = (await board(b)).friends[0];
+  assert.deepEqual(after.flags, ['w1']);
+  assert.equal(after.workouts.length, 2); // shown, so it can be reviewed and unflagged
+  assert.equal(await flag({ id: f.id, wid: 'w1', on: false }), 200);
+  assert.deepEqual((await board(b)).friends[0].flags, []);
+  assert.equal(await flag({ id: f.id, wid: 'nope' }), 404);
+  assert.equal(await flag({ id: 'nobody', wid: 'w1' }), 404);
+});
+
+test('a flag dies with the workout it was about, and with the friend', async () => {
+  const a = makeNode('Ana', A), b = makeNode('Beto', B);
+  await befriend(a, b);
+  a.save('u1', [wk('w1', '2026-11-23'), wk('w2', '2026-11-23')]);
+  const f = (await board(b)).friends[0];
+  await b.call('POST /api/rpg/flag', { id: f.id, wid: 'w1' });
+  a.save('u1', [wk('w2', '2026-11-23')]); // w1 removed on Ana's side
+  b.clock.now += 60000; a.clock.now += 60000;
+  assert.deepEqual((await board(b)).friends[0].flags, []);
+  await b.call('POST /api/rpg/flag', { id: f.id, wid: 'w2' });
+  await b.call('POST /api/rpg/remove', { id: f.id });
+  await befriend(a, b);
+  assert.deepEqual((await board(b)).friends[0].flags, []);
+});
+
+test('the feed says which unit the weights are in', async () => {
+  const a = makeNode('Ana', A), b = makeNode('Beto', B);
+  await befriend(a, b);
+  a.save('u1', [wk('w1', '2026-11-23')], 'lb');
+  const f = (await board(b)).friends[0];
+  assert.equal(f.unit, 'lb');
+  assert.equal(f.workouts[0].workout.entries[0].sets[0].w, 100); // untouched: the reader converts
+  a.save('u1', [wk('w1', '2026-11-23')], 'kg');
+  b.clock.now += 60000; a.clock.now += 60000;
+  assert.equal((await board(b)).friends[0].unit, 'kg');
 });

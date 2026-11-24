@@ -5931,4 +5931,11 @@ export default {
   "History does not add up": "O histórico não bate certo",
   "Could not update": "Não foi possível atualizar",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Conta os últimos 7 dias. Os treinos registados tarde ou editados depois não contam.",
+  "Flag": "Marcar",
+  "Unflag": "Remover marca",
+  "Too many flagged workouts": "Demasiados treinos marcados",
+  "{0} flagged workout": "{0} treino marcado",
+  "{0} flagged workouts": "{0} treinos marcados",
+  "No workouts this week.": "Nenhum treino esta semana.",
+  "Edited afterwards": "Editado depois",
 }

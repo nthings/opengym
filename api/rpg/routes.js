@@ -141,14 +141,32 @@ export function rpgRoutes({ json, readBody, readSession, dataDir, origin, enable
       // Another request may have added or removed a friend meanwhile: keep its list, our cache.
       const fresh = store.load(user.id);
       fresh.cache = Object.fromEntries(fresh.friends.filter(f => doc.cache[f.id]).map(f => [f.id, doc.cache[f.id]]));
+      // A flag on a workout the friend no longer has (removed, or older than the cache) is dead weight.
+      for (const f of fresh.friends) if (Array.isArray(f.flags)) f.flags = f.flags.filter(wid => fresh.cache[f.id]?.workouts?.[wid]);
       store.save(user.id, fresh);
       json(res, 200, {
         me: { name: user.name || '', workouts: recentWorkouts(materialize(log.read(user.id)), t) },
         friends: fresh.friends.map(f => {
           const c = fresh.cache[f.id];
-          return { id: f.id, name: f.name, serverUrl: f.serverUrl, fetchedAt: c?.fetchedAt || 0, error: c?.error || null, broken: c?.broken || null, workouts: c ? recentWorkouts(c.workouts, t) : [] };
+          return { id: f.id, name: f.name, serverUrl: f.serverUrl, unit: c?.unit || 'kg', flags: f.flags || [], fetchedAt: c?.fetchedAt || 0, error: c?.error || null, broken: c?.broken || null, workouts: c ? recentWorkouts(c.workouts, t) : [] };
         }),
       });
+    }),
+
+    // Flag a friend's workout as doubtful: it stops counting for me. Kept on my server, never sent
+    // to them (a flag is my judgement of what I rank, not a report).
+    'POST /api/rpg/flag': guard(async (req, res, user) => {
+      const body = await readBody(req);
+      const doc = store.load(user.id);
+      const f = doc.friends.find(x => x.id === String(body?.id || ''));
+      if (!f) return json(res, 404, { error: 'no such friend', code: 'not-friends' });
+      const wid = String(body?.wid || '');
+      if (!wid || !doc.cache[f.id]?.workouts?.[wid]) return json(res, 404, { error: 'no such workout', code: 'no-workout' });
+      f.flags = Array.isArray(f.flags) ? f.flags : [];
+      if (body?.on === false) f.flags = f.flags.filter(x => x !== wid);
+      else if (!f.flags.includes(wid)) f.flags.push(wid);
+      store.save(user.id, doc);
+      json(res, 200, { flags: f.flags });
     }),
 
     'POST /api/rpg/remove': guard(async (req, res, user) => {

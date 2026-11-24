@@ -5942,4 +5942,11 @@ export default {
   "History does not add up": "ประวัติไม่ตรงกัน",
   "Could not update": "อัปเดตไม่ได้",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "นับ 7 วันล่าสุด เวิร์กเอาต์ที่บันทึกช้าหรือแก้ไขภายหลังไม่ถูกนับ",
+  "Flag": "ทำเครื่องหมาย",
+  "Unflag": "ยกเลิกเครื่องหมาย",
+  "Too many flagged workouts": "เวิร์กเอาต์ที่ทำเครื่องหมายมากเกินไป",
+  "{0} flagged workout": "ทำเครื่องหมาย {0} เวิร์กเอาต์",
+  "{0} flagged workouts": "ทำเครื่องหมาย {0} เวิร์กเอาต์",
+  "No workouts this week.": "สัปดาห์นี้ไม่มีเวิร์กเอาต์",
+  "Edited afterwards": "แก้ไขภายหลัง",
 }

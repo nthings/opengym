@@ -37,7 +37,7 @@ export function serveFeed({ store, log, from, to, since, limit = PAGE }) {
     const all = log.read(uid);
     const entries = all.filter(e => e.seq > since).slice(0, limit);
     const last = all[all.length - 1];
-    return { publicKey: to, entries, head: last ? { seq: last.seq, hash: last.hash } : { seq: 0, hash: '' }, more: entries.length === limit && entries[entries.length - 1].seq < (last?.seq || 0) };
+    return { publicKey: to, unit: doc.unit === 'lb' ? 'lb' : 'kg', entries, head: last ? { seq: last.seq, hash: last.hash } : { seq: 0, hash: '' }, more: entries.length === limit && entries[entries.length - 1].seq < (last?.seq || 0) };
   }
   return null;
 }

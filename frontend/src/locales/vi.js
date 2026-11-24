@@ -5897,4 +5897,11 @@ export default {
   "History does not add up": "Lịch sử không khớp",
   "Could not update": "Không thể cập nhật",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Tính 7 ngày gần nhất. Buổi tập ghi muộn hoặc chỉnh sửa sau đó không được tính.",
+  "Flag": "Đánh dấu",
+  "Unflag": "Bỏ đánh dấu",
+  "Too many flagged workouts": "Quá nhiều buổi tập bị đánh dấu",
+  "{0} flagged workout": "{0} buổi tập bị đánh dấu",
+  "{0} flagged workouts": "{0} buổi tập bị đánh dấu",
+  "No workouts this week.": "Tuần này không có buổi tập.",
+  "Edited afterwards": "Đã sửa sau đó",
 };

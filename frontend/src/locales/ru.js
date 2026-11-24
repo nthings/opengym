@@ -5935,4 +5935,11 @@ export default {
   "History does not add up": "История не сходится",
   "Could not update": "Не удалось обновить",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Учитываются последние 7 дней. Тренировки, внесённые с опозданием или изменённые позже, не засчитываются.",
+  "Flag": "Отметить",
+  "Unflag": "Снять отметку",
+  "Too many flagged workouts": "Слишком много отмеченных тренировок",
+  "{0} flagged workout": "{0} отмеченная тренировка",
+  "{0} flagged workouts": { one: '{0} отмеченная тренировка', few: '{0} отмеченные тренировки', many: '{0} отмеченных тренировок' },
+  "No workouts this week.": "На этой неделе тренировок нет.",
+  "Edited afterwards": "Изменено позже",
 }

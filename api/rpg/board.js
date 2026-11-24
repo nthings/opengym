@@ -7,7 +7,7 @@ import { verifyEntries, materialize } from './log.js';
 export const STALE_MS = 30 * 1000;
 export const KEEP_DAYS = 120;
 
-const empty = () => ({ head: { seq: 0, hash: '' }, workouts: {}, fetchedAt: 0, error: null, broken: null });
+const empty = () => ({ head: { seq: 0, hash: '' }, workouts: {}, fetchedAt: 0, error: null, broken: null, unit: 'kg' });
 
 /**
  * Brings `doc.cache[friend.id]` up to date. `fetchFeed(since)` answers { status, body }. A page that
@@ -24,6 +24,8 @@ export async function refreshFriend({ doc, friend, fetchFeed, now }) {
       const r = await fetchFeed(c.head.seq);
       if (r.status !== 200 || !r.body) { c.error = r.status === 404 && r.body?.code === 'not-friends' ? 'not-friends' : 'refused'; break; }
       if (r.body.publicKey !== friend.publicKey || !Array.isArray(r.body.entries)) { c.error = 'refused'; break; }
+      // Weights arrive in the friend's own unit; the ranking needs to know which.
+      if (r.body.unit === 'kg' || r.body.unit === 'lb') c.unit = r.body.unit;
       const v = verifyEntries(r.body.entries, { publicKey: friend.publicKey, head: c.head });
       if (!v.ok) { c.broken = v.reason; break; }
       materialize(r.body.entries, c.workouts);

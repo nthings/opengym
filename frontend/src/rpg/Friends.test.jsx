@@ -6,6 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Friends from './Friends.jsx'
 import { DEF, useStore } from '../store/useStore.js'
+import { useUI } from '../store/useUI.js'
 
 const mocks = vi.hoisted(() => ({ api: vi.fn(), copy: vi.fn(async () => true) }))
 vi.mock('../lib/api.js', () => ({ api: mocks.api }))
@@ -14,7 +15,7 @@ vi.mock('../sheets.jsx', () => ({ confirmSheet: o => o.onConfirm() }))
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
 const ana = { id: 'f1', name: 'Ana', serverUrl: 'https://ana.example.com', publicKey: 'K'.repeat(43), since: 1 }
-let friends, root, host
+let friends, root, host, sheetRoot, sheetHost
 const answer = (path, opts) => {
   if (path === '/api/rpg/status') return Promise.resolve({ on: mocks.on })
   if (path === '/api/rpg/friends') return Promise.resolve({ publicKey: 'P'.repeat(43), friends: [...friends], invites: 0 })
@@ -23,6 +24,11 @@ const answer = (path, opts) => {
   if (path === '/api/rpg/add') {
     if (mocks.addError) return Promise.reject(Object.assign(new Error('server words'), { status: 400, data: { code: mocks.addError } }))
     friends.push(ana); return Promise.resolve({ friend: ana })
+  }
+  if (path === '/api/rpg/flag') {
+    const b = JSON.parse(opts.body)
+    mocks.flags = b.on === false ? mocks.flags.filter(x => x !== b.wid) : [...new Set([...mocks.flags, b.wid])]
+    return Promise.resolve({ flags: mocks.flags })
   }
   if (path === '/api/rpg/remove') { friends = friends.filter(f => f.id !== JSON.parse(opts.body).id); return Promise.resolve({ ok: true }) }
   return Promise.reject(new Error('unexpected ' + path))
@@ -36,6 +42,15 @@ async function mount() {
   await flush()
 }
 const btn = text => [...host.querySelectorAll('button')].find(b => b.textContent.trim() === text)
+const sheetBtn = text => [...sheetHost.querySelectorAll('button')].find(b => b.textContent.trim() === text)
+// The app's sheets live in useUI and are rendered by its host; the test renders the last one itself.
+async function openSheet() {
+  const sheet = useUI.getState().sheets[useUI.getState().sheets.length - 1]
+  sheetHost = document.createElement('div'); document.body.appendChild(sheetHost)
+  sheetRoot = createRoot(sheetHost)
+  await act(async () => { sheetRoot.render(sheet.render(() => {})) })
+  await flush()
+}
 const type = (input, v) => act(() => {
   Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, v)
   input.dispatchEvent(new Event('input', { bubbles: true }))
@@ -43,8 +58,8 @@ const type = (input, v) => act(() => {
 
 const wk = (id, d, w) => ({ wid: id, flag: '', workout: { id, d, name: 'x', entries: [{ id: '0025', sets: [{ w, r: 10, done: true }] }], prs: [] } })
 const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') }
-beforeEach(() => { mocks.board = { me: { name: 'Me', workouts: [] }, friends: [] }; friends = []; mocks.on = true; mocks.addError = null; mocks.api.mockReset(); mocks.api.mockImplementation(answer); mocks.copy.mockClear() })
-afterEach(() => { act(() => root.unmount()); host.remove() })
+beforeEach(() => { mocks.board = { me: { name: 'Me', workouts: [] }, friends: [] }; friends = []; mocks.on = true; mocks.addError = null; mocks.flags = []; mocks.api.mockReset(); mocks.api.mockImplementation(answer); mocks.copy.mockClear() })
+afterEach(() => { act(() => root.unmount()); host.remove(); if (sheetRoot) act(() => sheetRoot.unmount()); if (sheetHost) sheetHost.remove(); sheetRoot = null; sheetHost = null })
 
 describe('Friends', () => {
   it('on a server without the feature it says how to switch it on, and offers nothing else', async () => {
@@ -148,5 +163,43 @@ describe('Friends', () => {
   it('no ranking without friends', async () => {
     await mount()
     expect(host.querySelector('.rpg-rank')).toBeFalsy()
+  })
+
+  it('opens a friend week with their sets, and flags a doubtful workout', async () => {
+    friends = [ana]
+    mocks.board = {
+      me: { name: 'Me', workouts: [] },
+      friends: [{ ...ana, flags: [], error: null, broken: null, unit: 'kg', workouts: [wk('a', today(), 100)] }],
+    }
+    await mount()
+    await act(async () => { host.querySelector('.rpg-rank').click() })
+    await openSheet()
+    expect(sheetHost.textContent).toContain('Ana')
+    expect(sheetHost.textContent).toContain('100 × 10')
+    await act(async () => { sheetBtn('Flag').click() })
+    await flush()
+    const call = mocks.api.mock.calls.find(c => c[0] === '/api/rpg/flag')
+    expect(JSON.parse(call[1].body)).toEqual({ id: 'f1', wid: 'a', on: true })
+    expect(sheetBtn('Unflag')).toBeTruthy()
+    await act(async () => { sheetBtn('Unflag').click() })
+    await flush()
+    expect(JSON.parse(mocks.api.mock.calls.filter(c => c[0] === '/api/rpg/flag').at(-1)[1].body)).toEqual({ id: 'f1', wid: 'a', on: false })
+    expect(sheetBtn('Flag')).toBeTruthy()
+  })
+
+  it('counts my flags, and three of them leave the friend unranked', async () => {
+    friends = [ana]
+    const three = ['a', 'b', 'c'].map((id, i) => wk(id, today(), 100 + i))
+    mocks.board = { me: { name: 'Me', workouts: [] }, friends: [{ ...ana, flags: ['a'], error: null, broken: null, workouts: three }] }
+    await mount()
+    let row = host.querySelector('.rpg-rank')
+    expect(row.textContent).toContain('1 flagged workout')
+    expect(row.textContent).toContain('70 XP') // 50 for the day plus the two left: 10 + 10
+    act(() => root.unmount()); host.remove()
+    mocks.board = { me: { name: 'Me', workouts: [] }, friends: [{ ...ana, flags: ['a', 'b', 'c'], error: null, broken: null, workouts: three }] }
+    await mount()
+    row = [...host.querySelectorAll('.rpg-rank')].find(r => r.textContent.includes('Ana'))
+    expect(row.textContent).toContain('Too many flagged workouts')
+    expect(row.textContent).not.toContain('XP')
   })
 })

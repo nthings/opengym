@@ -5924,4 +5924,11 @@ export default {
   "History does not add up": "歷史紀錄對不上",
   "Could not update": "無法更新",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "統計最近 7 天。補記太晚或事後修改過的訓練不計入。",
+  "Flag": "標記",
+  "Unflag": "取消標記",
+  "Too many flagged workouts": "被標記的訓練太多",
+  "{0} flagged workout": "{0} 個訓練被標記",
+  "{0} flagged workouts": "{0} 個訓練被標記",
+  "No workouts this week.": "本週沒有訓練。",
+  "Edited afterwards": "事後修改過",
 }
