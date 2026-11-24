@@ -5974,4 +5974,5 @@ export default {
   "That invite was already used or has expired.": "Inbjudan är redan använd eller har gått ut.",
   "That is not a valid invite link.": "Det är inte en giltig inbjudningslänk.",
   "Could not reach that server.": "Det gick inte att nå servern.",
+  "That invite is yours. Send it to a friend.": "Den inbjudan är din egen. Skicka den till en vän.",
 }

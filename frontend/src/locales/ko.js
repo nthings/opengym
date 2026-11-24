@@ -5927,4 +5927,5 @@ export default {
   "That invite was already used or has expired.": "이미 사용했거나 만료된 초대입니다.",
   "That is not a valid invite link.": "올바른 초대 링크가 아닙니다.",
   "Could not reach that server.": "해당 서버에 연결할 수 없습니다.",
+  "That invite is yours. Send it to a friend.": "내 초대입니다. 친구에게 보내세요.",
 }

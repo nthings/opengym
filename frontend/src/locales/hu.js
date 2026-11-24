@@ -5930,4 +5930,5 @@ export default {
   "That invite was already used or has expired.": "Ez a meghívó már fel lett használva, vagy lejárt.",
   "That is not a valid invite link.": "Ez nem érvényes meghívólink.",
   "Could not reach that server.": "Nem érhető el az a szerver.",
+  "That invite is yours. Send it to a friend.": "Ez a saját meghívód. Küldd el egy barátodnak.",
 }

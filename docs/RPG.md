@@ -64,7 +64,7 @@ profile, in `localStorage` (`opengym-rpg-level:<id>`), so a level-up is announce
 Off unless the server runs with `RPG=on` (and `RPG_ALLOW_LAN=1` to reach friends on a home network,
 for tests). Then each profile gets an Ed25519 key pair, a friends list and one-time invite links
 (48 hours), kept in `DATA_DIR/rpg/<userId>.json` (mode 600). Friends swap public keys through the
-link: `POST /api/rpg/invite`, `POST /api/rpg/add` (this server calls the other one's
+link (two profiles on the same server can be friends too: the invite is taken in-process, no network): `POST /api/rpg/invite`, `POST /api/rpg/add` (this server calls the other one's
 `POST /api/rpg/accept`), `GET /api/rpg/friends`, `POST /api/rpg/remove`. The app side is the **Friends** row on the RPG sheet (`/rpg/friends`: make an invite link, paste a
 friend's link to add them, remove). Open the link's address only to copy it: it is pasted into the
 app, not visited. Nothing about training

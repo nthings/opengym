@@ -5927,4 +5927,5 @@ export default {
   "That invite was already used or has expired.": "Bu davet zaten kullanılmış ya da süresi dolmuş.",
   "That is not a valid invite link.": "Bu geçerli bir davet bağlantısı değil.",
   "Could not reach that server.": "O sunucuya ulaşılamadı.",
+  "That invite is yours. Send it to a friend.": "Bu davet senin. Bir arkadaşına gönder.",
 }

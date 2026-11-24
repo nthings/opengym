@@ -5927,4 +5927,5 @@ export default {
   "That invite was already used or has expired.": "该邀请已被使用或已过期。",
   "That is not a valid invite link.": "这不是有效的邀请链接。",
   "Could not reach that server.": "无法连接到该服务器。",
+  "That invite is yours. Send it to a friend.": "这是你自己的邀请。请发给好友。",
 }

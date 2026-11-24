@@ -18,8 +18,8 @@ function makeNode(name, origin, { enabled = true, user = { id: 'u1', name } } = 
     return { status: res.code, body: res.body };
   };
   const routes = rpgRoutes({
-    json, readBody: async req => req.body || {}, readSession: req => (req.signedOut ? null : user),
-    dataDir, origin, enabled, allowLan: false, post, nameOf: () => name,
+    json, readBody: async req => req.body || {}, readSession: req => (req.signedOut ? null : req.user || user),
+    dataDir, origin, enabled, allowLan: false, post, nameOf: uid => (uid === 'u2' ? 'Beto' : name),
   });
   nodes[origin] = { routes, name };
   return {
@@ -63,6 +63,23 @@ test('a forged token is invite-invalid', async () => {
   const b = makeNode('Beto', B_URL);
   const r = await b.call('POST /api/rpg/add', { link: `${A_URL}/#/rpg/invite/${'Z'.repeat(43)}` });
   assert.equal(r.body.code, 'invite-invalid');
+});
+
+test('two profiles on the same server can be friends, with no network call', async () => {
+  const a = makeNode('Ana', A_URL);
+  const beto = { id: 'u2', name: 'Beto' };
+  const link = (await a.call('POST /api/rpg/invite')).body.link;
+  const add = await a.call('POST /api/rpg/add', { link }, { user: beto });
+  assert.equal(add.code, 200);
+  assert.equal(add.body.friend.name, 'Ana');
+  assert.equal(add.body.friend.serverUrl, A_URL);
+  const lu1 = (await a.call('GET /api/rpg/friends')).body, lu2 = (await a.call('GET /api/rpg/friends', null, { user: beto })).body;
+  assert.equal(lu1.friends[0].name, 'Beto');
+  assert.equal(lu2.friends[0].name, 'Ana');
+  assert.equal(lu1.friends[0].publicKey, lu2.publicKey);
+  assert.notEqual(lu1.publicKey, lu2.publicKey);
+  // The invite was used up.
+  assert.equal((await a.call('POST /api/rpg/add', { link }, { user: { id: 'u3', name: 'Cris' } })).body.code, 'invite-invalid');
 });
 
 test('adding yourself is refused', async () => {

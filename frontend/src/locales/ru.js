@@ -5931,4 +5931,5 @@ export default {
   "That invite was already used or has expired.": "Это приглашение уже использовано или истекло.",
   "That is not a valid invite link.": "Это недействительная ссылка-приглашение.",
   "Could not reach that server.": "Не удалось связаться с этим сервером.",
+  "That invite is yours. Send it to a friend.": "Это ваше собственное приглашение. Отправьте его другу.",
 }

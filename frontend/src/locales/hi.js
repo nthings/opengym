@@ -5927,4 +5927,5 @@ export default {
   "That invite was already used or has expired.": "यह आमंत्रण पहले ही इस्तेमाल हो चुका है या समाप्त हो गया है।",
   "That is not a valid invite link.": "यह मान्य आमंत्रण लिंक नहीं है।",
   "Could not reach that server.": "उस सर्वर तक नहीं पहुँचा जा सका।",
+  "That invite is yours. Send it to a friend.": "यह आमंत्रण आपका अपना है। इसे किसी दोस्त को भेजें।",
 }

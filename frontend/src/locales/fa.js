@@ -5893,4 +5893,5 @@ export default {
   "That invite was already used or has expired.": "این دعوت قبلاً استفاده شده یا منقضی شده است.",
   "That is not a valid invite link.": "این پیوند دعوت معتبر نیست.",
   "Could not reach that server.": "به آن سرور دسترسی پیدا نشد.",
+  "That invite is yours. Send it to a friend.": "این دعوت مال خودت است. آن را برای یک دوست بفرست.",
 }

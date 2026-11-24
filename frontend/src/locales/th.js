@@ -5938,4 +5938,5 @@ export default {
   "That invite was already used or has expired.": "คำเชิญนี้ถูกใช้ไปแล้วหรือหมดอายุ",
   "That is not a valid invite link.": "นี่ไม่ใช่ลิงก์คำเชิญที่ถูกต้อง",
   "Could not reach that server.": "เชื่อมต่อกับเซิร์ฟเวอร์นั้นไม่ได้",
+  "That invite is yours. Send it to a friend.": "คำเชิญนี้เป็นของคุณเอง ส่งให้เพื่อนของคุณ",
 }

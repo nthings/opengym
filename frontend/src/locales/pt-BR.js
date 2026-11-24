@@ -423,6 +423,7 @@ export const PT_BR_OVERRIDES = {
   // --- rpg fork: character sheet; the rest (Aprendiz, Guerreiro, Campeão, Lenda, Atributos, {0} XP...) is the same in pt-BR ---
   "Badges": "Medalhas",
   "Next badge": "Próxima medalha",
+  "That invite is yours. Send it to a friend.": "Esse convite é seu. Envie para um amigo.",
   "Remove {0} from your friends?": "Remover {0} dos seus amigos?",
   "Valid for 48 hours and works once. Your friend pastes it under Friends, Add a friend.": "Válido por 48 horas e só funciona uma vez. Seu amigo cola em Amigos, Adicionar um amigo.",
   "Friends need a server with RPG switched on (RPG=on).": "Amigos precisam de um servidor com o RPG ativado (RPG=on).",

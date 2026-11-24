@@ -6006,4 +6006,5 @@ export default {
   "That invite was already used or has expired.": "এই আমন্ত্রণ আগেই ব্যবহার হয়েছে বা মেয়াদ শেষ।",
   "That is not a valid invite link.": "এটি বৈধ আমন্ত্রণ লিংক নয়।",
   "Could not reach that server.": "ওই সার্ভারে পৌঁছানো যায়নি।",
+  "That invite is yours. Send it to a friend.": "এটি আপনার নিজের আমন্ত্রণ। এটি কোনো বন্ধুকে পাঠান।",
 }

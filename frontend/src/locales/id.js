@@ -5892,4 +5892,5 @@ export default {
   "That invite was already used or has expired.": "Undangan itu sudah dipakai atau kedaluwarsa.",
   "That is not a valid invite link.": "Itu bukan tautan undangan yang valid.",
   "Could not reach that server.": "Tidak dapat menjangkau server itu.",
+  "That invite is yours. Send it to a friend.": "Undangan itu milikmu. Kirimkan ke temanmu.",
 };

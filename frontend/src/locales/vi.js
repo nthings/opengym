@@ -5893,4 +5893,5 @@ export default {
   "That invite was already used or has expired.": "Lời mời này đã được dùng hoặc đã hết hạn.",
   "That is not a valid invite link.": "Đây không phải liên kết lời mời hợp lệ.",
   "Could not reach that server.": "Không thể kết nối tới máy chủ đó.",
+  "That invite is yours. Send it to a friend.": "Lời mời này là của bạn. Hãy gửi cho một người bạn.",
 };

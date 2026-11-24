@@ -5923,4 +5923,5 @@ export default {
   "That invite was already used or has expired.": "Šis kvietimas jau panaudotas arba nebegalioja.",
   "That is not a valid invite link.": "Tai nėra tinkama kvietimo nuoroda.",
   "Could not reach that server.": "Nepavyko pasiekti to serverio.",
+  "That invite is yours. Send it to a friend.": "Tai jūsų pačių kvietimas. Nusiųskite jį draugui.",
 }

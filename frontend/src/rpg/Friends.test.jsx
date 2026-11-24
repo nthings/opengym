@@ -20,7 +20,7 @@ const answer = (path, opts) => {
   if (path === '/api/rpg/friends') return Promise.resolve({ publicKey: 'P'.repeat(43), friends: [...friends], invites: 0 })
   if (path === '/api/rpg/invite') return Promise.resolve({ link: 'https://me.example.com/#/rpg/invite/' + 'T'.repeat(43), expiresAt: 1 })
   if (path === '/api/rpg/add') {
-    if (mocks.addError) return Promise.reject(Object.assign(new Error('server words'), { code: mocks.addError }))
+    if (mocks.addError) return Promise.reject(Object.assign(new Error('server words'), { status: 400, data: { code: mocks.addError } }))
     friends.push(ana); return Promise.resolve({ friend: ana })
   }
   if (path === '/api/rpg/remove') { friends = friends.filter(f => f.id !== JSON.parse(opts.body).id); return Promise.resolve({ ok: true }) }
@@ -89,7 +89,7 @@ describe('Friends', () => {
   it('says why an invite failed, in words of its own', async () => {
     await mount()
     const input = () => host.querySelector('input:not([readonly])')
-    for (const [code, text] of [['invite-invalid', 'already used or has expired'], ['bad-link', 'not a valid invite link'], ['unreachable', 'Could not reach that server']]) {
+    for (const [code, text] of [['invite-invalid', 'already used or has expired'], ['bad-link', 'not a valid invite link'], ['self', 'That invite is yours'], ['unreachable', 'Could not reach that server']]) {
       mocks.addError = code
       type(input(), 'https://x.example.com/#/rpg/invite/' + 'A'.repeat(43))
       await act(async () => { btn('Add a friend').click() })

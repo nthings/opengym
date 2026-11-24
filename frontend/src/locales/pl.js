@@ -5927,4 +5927,5 @@ export default {
   "That invite was already used or has expired.": "To zaproszenie zostało już użyte lub wygasło.",
   "That is not a valid invite link.": "To nie jest prawidłowy link do zaproszenia.",
   "Could not reach that server.": "Nie można połączyć się z tym serwerem.",
+  "That invite is yours. Send it to a friend.": "To twoje własne zaproszenie. Wyślij je znajomemu.",
 }

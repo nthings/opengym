@@ -5893,4 +5893,5 @@ export default {
   "That invite was already used or has expired.": "Tato pozvánka už byla použita nebo vypršela.",
   "That is not a valid invite link.": "To není platný odkaz na pozvánku.",
   "Could not reach that server.": "K tomu serveru se nepodařilo připojit.",
+  "That invite is yours. Send it to a friend.": "Tohle je vaše pozvánka. Pošlete ji příteli.",
 }

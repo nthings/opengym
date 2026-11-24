@@ -5982,4 +5982,5 @@ export default {
   "That invite was already used or has expired.": "استُخدمت هذه الدعوة من قبل أو انتهت صلاحيتها.",
   "That is not a valid invite link.": "هذا ليس رابط دعوة صالحًا.",
   "Could not reach that server.": "تعذّر الوصول إلى ذلك الخادم.",
+  "That invite is yours. Send it to a friend.": "هذه دعوتك أنت. أرسلها إلى صديق.",
 }

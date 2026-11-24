@@ -18,6 +18,27 @@ export function rpgRoutes({ json, readBody, readSession, dataDir, origin, enable
   const off = res => json(res, 404, { error: 'the RPG friends feature is off on this server', code: 'rpg-off' });
   const attempts = [];
 
+  // Takes an invite for whichever profile made it: burns the token, stores the new friend, answers
+  // with this profile's key. Used by the accept route (another server calls it) and by `add` when
+  // the invite is from this same server (two profiles here, no network involved).
+  function acceptInvite(body) {
+    const t = now();
+    if (typeof body?.token !== 'string' || !KEY_RE.test(body?.publicKey || '')) return { status: 400, body: { error: 'bad request', code: 'bad-request' } };
+    let serverUrl;
+    try { serverUrl = new URL(body.serverUrl).origin; } catch { return { status: 400, body: { error: 'bad request', code: 'bad-request' } }; }
+    for (const uid of store.ids()) {
+      let doc;
+      try { doc = store.load(uid); } catch { continue; }
+      if (!consumeInvite(doc, body.token, t)) continue;
+      // The token is burned in the document in memory; keep it burned even if this is refused.
+      if (body.publicKey === doc.keys.publicKey) { store.save(uid, doc); return { status: 400, body: { error: 'that invite is yours', code: 'self' } }; }
+      addFriend(doc, { name: body.name, serverUrl, publicKey: body.publicKey }, t);
+      store.save(uid, doc);
+      return { status: 200, body: { publicKey: doc.keys.publicKey, name: (nameOf && nameOf(uid)) || '', serverUrl: base } };
+    }
+    return { status: 400, body: { error: 'that invite is not valid', code: 'invite-invalid' } };
+  }
+
   const guard = fn => async (req, res) => {
     if (!enabled) return off(res);
     const user = readSession(req);
@@ -45,16 +66,16 @@ export function rpgRoutes({ json, readBody, readSession, dataDir, origin, enable
       const body = await readBody(req);
       const link = parseInviteLink(body?.link);
       if (!link) return json(res, 400, { error: 'that is not an invite link', code: 'bad-link' });
-      if (link.base === base) return json(res, 400, { error: 'that invite is from this same server', code: 'self' });
       if (outboundUrlError(link.base, { allowLan })) return json(res, 400, { error: 'that address is not allowed', code: 'bad-address' });
       const doc = store.load(user.id);
+      const mine = { token: link.token, publicKey: doc.keys.publicKey, serverUrl: base, name: user.name || '' };
       let r;
       try {
-        r = await send(link.base + '/api/rpg/accept', { token: link.token, publicKey: doc.keys.publicKey, serverUrl: base, name: user.name || '' });
+        r = link.base === base ? acceptInvite(mine) : await send(link.base + '/api/rpg/accept', mine);
       } catch { return json(res, 502, { error: 'could not reach that server', code: 'unreachable' }); }
       if (r.status !== 200) {
-        const code = r.body?.code === 'invite-invalid' ? 'invite-invalid' : r.body?.code === 'rpg-off' ? 'friend-rpg-off' : 'refused';
-        return json(res, code === 'invite-invalid' ? 400 : 502, { error: 'that server did not accept the invite', code });
+        const code = ['invite-invalid', 'self'].includes(r.body?.code) ? r.body.code : r.body?.code === 'rpg-off' ? 'friend-rpg-off' : 'refused';
+        return json(res, code === 'invite-invalid' || code === 'self' ? 400 : 502, { error: 'that server did not accept the invite', code });
       }
       const them = r.body;
       if (!them || !KEY_RE.test(them.publicKey)) return json(res, 502, { error: 'that server answered something else', code: 'refused' });
@@ -72,21 +93,9 @@ export function rpgRoutes({ json, readBody, readSession, dataDir, origin, enable
       if (attempts.length >= ACCEPT_MAX) return json(res, 429, { error: 'slow down a little', code: 'rate-limited' }, { 'Retry-After': '60' });
       attempts.push(t);
       const body = await readBody(req);
-      if (typeof body?.token !== 'string' || !KEY_RE.test(body?.publicKey || '') || outboundUrlError(body?.serverUrl, { allowLan })) {
-        return json(res, 400, { error: 'bad request', code: 'bad-request' });
-      }
-      const serverUrl = new URL(body.serverUrl).origin;
-      for (const uid of store.ids()) {
-        let doc;
-        try { doc = store.load(uid); } catch { continue; }
-        if (!consumeInvite(doc, body.token, t)) continue;
-        // The token is burned in the document in memory; keep it burned even if this is refused.
-        if (body.publicKey === doc.keys.publicKey) { store.save(uid, doc); return json(res, 400, { error: 'that invite is yours', code: 'self' }); }
-        addFriend(doc, { name: body.name, serverUrl, publicKey: body.publicKey }, t);
-        store.save(uid, doc);
-        return json(res, 200, { publicKey: doc.keys.publicKey, name: (nameOf && nameOf(uid)) || '', serverUrl: base });
-      }
-      json(res, 400, { error: 'that invite is not valid', code: 'invite-invalid' });
+      if (outboundUrlError(body?.serverUrl, { allowLan })) return json(res, 400, { error: 'bad request', code: 'bad-request' });
+      const r = acceptInvite(body);
+      json(res, r.status, r.body);
     },
 
     'POST /api/rpg/remove': guard(async (req, res, user) => {

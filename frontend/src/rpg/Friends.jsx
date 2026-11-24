@@ -11,11 +11,14 @@ import { confirmSheet } from '../sheets.jsx'
 // api/rpg/ (stage A: keys and invites; nothing about training moves yet).
 
 // Written inside t() so check-source-strings finds them; the server's own words are never shown.
-const errorText = code => (
-  code === 'invite-invalid' ? t('That invite was already used or has expired.')
-    : code === 'bad-link' || code === 'bad-address' || code === 'self' ? t('That is not a valid invite link.')
-      : t('Could not reach that server.')
-)
+// api() hangs the server's answer on the error as `data` (lib/api.js), not as `code`.
+const errorText = e => {
+  const code = e?.data?.code || e?.code
+  return code === 'invite-invalid' ? t('That invite was already used or has expired.')
+    : code === 'self' ? t('That invite is yours. Send it to a friend.')
+      : code === 'bad-link' || code === 'bad-address' ? t('That is not a valid invite link.')
+        : t('Could not reach that server.')
+}
 const hostOf = url => { try { return new URL(url).host } catch { return url } }
 
 export default function Friends() {
@@ -33,13 +36,13 @@ export default function Friends() {
       const s = await api('/api/rpg/status')
       setOn(!!s.on)
       if (s.on) setFriends((await api('/api/rpg/friends')).friends || [])
-    } catch (e) { setOn(false); setError(errorText(e.code)) }
+    } catch (e) { setOn(false); setError(errorText(e)) }
   }, [])
   useEffect(() => { load() }, [load])
 
   const makeInvite = async () => {
     setError(''); setCopied(false)
-    try { setInvite((await api('/api/rpg/invite', { method: 'POST', body: '{}' })).link) } catch (e) { setError(errorText(e.code)) }
+    try { setInvite((await api('/api/rpg/invite', { method: 'POST', body: '{}' })).link) } catch (e) { setError(errorText(e)) }
   }
   const copy = async () => { if (await copyText(invite)) setCopied(true) }
   const add = async () => {
@@ -48,13 +51,13 @@ export default function Friends() {
       await api('/api/rpg/add', { method: 'POST', body: JSON.stringify({ link: text.trim() }) })
       setText('')
       await load()
-    } catch (e) { setError(errorText(e.code)) }
+    } catch (e) { setError(errorText(e)) }
     setBusy(false)
   }
   const remove = f => confirmSheet({
     title: t('Remove friend'), message: t('Remove {0} from your friends?', f.name || hostOf(f.serverUrl)),
     confirmText: t('Remove'), danger: true,
-    onConfirm: async () => { try { await api('/api/rpg/remove', { method: 'POST', body: JSON.stringify({ id: f.id }) }); await load() } catch (e) { setError(errorText(e.code)) } },
+    onConfirm: async () => { try { await api('/api/rpg/remove', { method: 'POST', body: JSON.stringify({ id: f.id }) }); await load() } catch (e) { setError(errorText(e)) } },
   })
 
   return <div className="narrow rpg">

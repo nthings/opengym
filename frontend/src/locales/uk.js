@@ -5924,4 +5924,5 @@ export default {
   "That invite was already used or has expired.": "Це запрошення вже використано або воно втратило чинність.",
   "That is not a valid invite link.": "Це недійсне посилання-запрошення.",
   "Could not reach that server.": "Не вдалося зв’язатися з цим сервером.",
+  "That invite is yours. Send it to a friend.": "Це ваше власне запрошення. Надішліть його другові.",
 }
