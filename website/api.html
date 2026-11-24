@@ -264,6 +264,9 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
     <a class="side-link" href="#integrations"><b>Integrations</b></a>
   </div>
   <div class="side-group">
+    <a class="side-link" href="#rpg"><b>RPG friends</b></a>
+  </div>
+  <div class="side-group">
     <a class="side-link" href="#tokens"><b>Scoped tokens</b></a>
   </div>
   <div class="side-group">
@@ -306,6 +309,7 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
   <div class="ref-toc-group"><a class="ref-toc-a" href="#media">Media</a></div>
   <div class="ref-toc-group"><a class="ref-toc-a" href="#coach">AI Coach</a></div>
   <div class="ref-toc-group"><a class="ref-toc-a" href="#integrations">Integrations</a></div>
+  <div class="ref-toc-group"><a class="ref-toc-a" href="#rpg">RPG friends</a></div>
   <div class="ref-toc-group"><a class="ref-toc-a" href="#tokens">Scoped tokens</a></div>
   <div class="ref-toc-group"><a class="ref-toc-a" href="#mcp">MCP connector</a></div>
   <div class="ref-toc-group"><a class="ref-toc-a" href="#trainers">Trainers</a></div>
@@ -328,7 +332,7 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
   <p class="api-facts">
     <span>OpenAPI 3.1.0</span>
     <span>openGym v1.4.5</span>
-    <span>177 endpoints</span>
+    <span>183 endpoints</span>
     <span>AGPL-3.0-or-later</span>
   </p>
 
@@ -3675,6 +3679,230 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
   <div class="prow rrow">
     <span class="r-code s4">404</span>
     <span class="p-desc"><code>code</code> <code>off</code>: the server runs without <code>INTEGRATIONS</code> (the default). <code>code</code> <code>missing</code>: no such connection on this profile (another profile's id is the same answer).<span class="r-sig"><code>{&quot;error&quot;:&quot;integrations are off on this server&quot;}</code></span></span>
+  </div>
+    </div>
+  </div>
+</details>
+  </div>
+</section>
+
+<section class="api-sec" id="rpg">
+  <h2>RPG friends</h2>
+  <p class="sub">The RPG friends list (fork). Off unless the server runs with <code>RPG=on</code>: then every route but <code>/api/rpg/status</code> answers 404 <code>rpg-off</code>. Friends swap Ed25519 public keys through a one-time invite link (48 hours, single use). See docs/RPG.md.</p>
+  <div class="eps">
+
+<details class="ep" id="op-rpgStatus">
+  <summary>
+    <span class="m get">GET</span>
+    <span class="ep-path"><code>/api/rpg/status</code><span class="ep-chip public">public</span></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">Whether the RPG friends feature is on</span>
+  </summary>
+  <div class="ep-body">
+
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Public: no authentication required.</span></p>
+
+
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">The flag.<span class="r-sig">{ on: boolean }</span></span>
+  </div>
+    </div>
+  </div>
+</details>
+
+<details class="ep" id="op-rpgFriends">
+  <summary>
+    <span class="m get">GET</span>
+    <span class="ep-path"><code>/api/rpg/friends</code></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">Your public key, your friends and how many invites are open</span>
+  </summary>
+  <div class="ep-body">
+
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Requires a session: the cookie set at sign-in, or <code>Authorization: Bearer &lt;token&gt;</code> from mobile-app pairing.</span></p>
+
+
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">The friends list. Never carries a private key.<span class="r-sig">{ publicKey: string, friends: object[], invites: integer }</span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">401</span>
+    <span class="p-desc">No session, expired/revoked session, or a disabled account.<span class="r-sig"><code>{&quot;error&quot;:&quot;not signed in&quot;}</code></span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">404</span>
+    <span class="p-desc">The feature is off (code rpg-off).</span>
+  </div>
+    </div>
+  </div>
+</details>
+
+<details class="ep" id="op-rpgInvite">
+  <summary>
+    <span class="m post">POST</span>
+    <span class="ep-path"><code>/api/rpg/invite</code></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">Make a one-time invite link (valid 48 hours)</span>
+  </summary>
+  <div class="ep-body">
+
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Requires a session: the cookie set at sign-in, or <code>Authorization: Bearer &lt;token&gt;</code> from mobile-app pairing.</span></p>
+
+
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">The link to give a friend.<span class="r-sig">{ link: string, expiresAt: integer }</span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">401</span>
+    <span class="p-desc">No session, expired/revoked session, or a disabled account.<span class="r-sig"><code>{&quot;error&quot;:&quot;not signed in&quot;}</code></span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">404</span>
+    <span class="p-desc">The feature is off (code rpg-off).</span>
+  </div>
+    </div>
+  </div>
+</details>
+
+<details class="ep" id="op-rpgAdd">
+  <summary>
+    <span class="m post">POST</span>
+    <span class="ep-path"><code>/api/rpg/add</code></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">Add a friend from their invite link</span>
+  </summary>
+  <div class="ep-body">
+<p>This server calls the other one's <code>accept</code> route with its public key, and stores the key it gets back. Errors carry a <code>code</code>: <code>bad-link</code>, <code>bad-address</code>, <code>self</code>, <code>invite-invalid</code>, <code>unreachable</code>, <code>friend-rpg-off</code>, <code>refused</code>.</p>
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Requires a session: the cookie set at sign-in, or <code>Authorization: Bearer &lt;token&gt;</code> from mobile-app pairing.</span></p>
+
+<p class="ep-h">Request body <span class="p-hint">(JSON)</span></p><div class="ptab">
+  <div class="prow">
+    <span class="p-name">link<em class="p-req" title="required">required</em></span>
+    <span class="p-type">string</span>
+    <span class="p-desc"></span>
+  </div>
+</div>
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">The new friend.<span class="r-sig">{ friend: object }</span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">400</span>
+    <span class="p-desc">bad-link, bad-address, self or invite-invalid.</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">401</span>
+    <span class="p-desc">No session, expired/revoked session, or a disabled account.<span class="r-sig"><code>{&quot;error&quot;:&quot;not signed in&quot;}</code></span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">404</span>
+    <span class="p-desc">The feature is off (code rpg-off).</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s5">502</span>
+    <span class="p-desc">unreachable, friend-rpg-off or refused.</span>
+  </div>
+    </div>
+  </div>
+</details>
+
+<details class="ep" id="op-rpgAccept">
+  <summary>
+    <span class="m post">POST</span>
+    <span class="ep-path"><code>/api/rpg/accept</code><span class="ep-chip public">public</span></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">Another server accepts an invite (server to server, no session)</span>
+  </summary>
+  <div class="ep-body">
+<p>Guarded by the one-time token and a rate limit (30 a minute for the server). A wrong, used or expired token all answer <code>invite-invalid</code>.</p>
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Public: no authentication required.</span></p>
+
+<p class="ep-h">Request body <span class="p-hint">(JSON)</span></p><div class="ptab">
+  <div class="prow">
+    <span class="p-name">token<em class="p-req" title="required">required</em></span>
+    <span class="p-type">string</span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">publicKey<em class="p-req" title="required">required</em></span>
+    <span class="p-type">string</span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">serverUrl<em class="p-req" title="required">required</em></span>
+    <span class="p-type">string</span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">name</span>
+    <span class="p-type">string</span>
+    <span class="p-desc"></span>
+  </div>
+</div>
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">This profile's public key, name and server.<span class="r-sig">{ publicKey: string, name: string, serverUrl: string }</span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">400</span>
+    <span class="p-desc">bad-request, self or invite-invalid.</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">404</span>
+    <span class="p-desc">The feature is off (code rpg-off).</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">429</span>
+    <span class="p-desc">Too many attempts.</span>
+  </div>
+    </div>
+  </div>
+</details>
+
+<details class="ep" id="op-rpgRemove">
+  <summary>
+    <span class="m post">POST</span>
+    <span class="ep-path"><code>/api/rpg/remove</code></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">Remove a friend</span>
+  </summary>
+  <div class="ep-body">
+
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Requires a session: the cookie set at sign-in, or <code>Authorization: Bearer &lt;token&gt;</code> from mobile-app pairing.</span></p>
+
+<p class="ep-h">Request body <span class="p-hint">(JSON)</span></p><div class="ptab">
+  <div class="prow">
+    <span class="p-name">id<em class="p-req" title="required">required</em></span>
+    <span class="p-type">string</span>
+    <span class="p-desc"></span>
+  </div>
+</div>
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">Removed.<span class="r-sig"><a href="#schema-Ok">Ok</a></span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">401</span>
+    <span class="p-desc">No session, expired/revoked session, or a disabled account.<span class="r-sig"><code>{&quot;error&quot;:&quot;not signed in&quot;}</code></span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">404</span>
+    <span class="p-desc">No such friend, or the feature is off.</span>
   </div>
     </div>
   </div>

@@ -144,6 +144,7 @@ const TAGS = {
   // spec needs a line here.
   coach: { title: 'AI Coach', side: 'Plans, reviews, debriefs' },
   integrations: { title: 'Integrations', side: 'Webhooks (INTEGRATIONS)' },
+  rpg: { title: 'RPG friends', side: 'Friends list (RPG, fork)' }, // rpg fork hook
   tokens: { title: 'Scoped tokens', side: 'API tokens and MCP' },
   mcp: { title: 'MCP connector', side: 'OAuth sign-in for Claude &amp; ChatGPT (MCP)' },
   trainers: { title: 'Trainers', side: 'Studios, sharing &amp; consent (TRAINERS)' },

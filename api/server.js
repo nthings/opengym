@@ -60,6 +60,7 @@ import { createBudgets, createCodeGuard } from './budgets.js';
 import { libraryConfig, publicLibraryConfig } from './library/config.js';
 import { createLibraryStore } from './library/store.js';
 import { libraryRoutes } from './library/routes.js';
+import { rpgRoutes } from './rpg/routes.js'; // rpg fork hook
 import { currentConsent } from './consent.js';
 import { oidcConfig } from './oidc/config.js';
 import { createProvider } from './oidc/provider.js';
@@ -112,6 +113,10 @@ const ADMIN_DATA_VIEW = /^(1|true|yes|on)$/i.test(process.env.ADMIN_DATA_VIEW ||
 // The community library (docs/dev/SHARED-LIBRARY-API.md): LIBRARY=on, off by default. SHARING=off
 // still closes it. Read once; library/config.js has every SHARE_* switch.
 const LIBRARY = libraryConfig(process.env);
+// The RPG friends feature (fork, docs/RPG.md): RPG=on, off by default. RPG_ALLOW_LAN=1 lets it reach
+// friends on the home network (tests).
+const RPG = /^(1|true|yes|on)$/i.test(process.env.RPG || '');
+const RPG_ALLOW_LAN = /^(1|true|yes|on)$/i.test(process.env.RPG_ALLOW_LAN || '');
 // Sign in with an identity provider (#130, docs/SELF_HOSTING.md): on once OIDC_ISSUER and
 // OIDC_CLIENT_ID are set. OIDC_ONLY makes the provider the one way in (admins keep their passkeys).
 const OIDC = oidcConfig(process.env, { origin: ORIGIN });
@@ -1605,6 +1610,8 @@ function removeAccount(u) {
   } catch (e) { console.error('org: could not remove', u.id, e.message); }
   // What they shared with the server stops being shared; copies others took stay theirs.
   try { library.removeUser(u.id); } catch (e) { console.error('library: could not withdraw items of', u.id, e.message); }
+  // Their RPG keys and friends list (rpg fork hook); friends' copies of earlier data stay theirs.
+  try { fs.rmSync(path.join(DATA, 'rpg', u.id + '.json'), { force: true }); } catch (e) { console.error('rpg: could not remove', u.id, e.message); }
   saveDb();
 }
 
@@ -2593,6 +2600,7 @@ const routes = {
       // Which integrations this server offers (only to a session, like the Coach block). Absent
       // with INTEGRATIONS unset, which is how the app knows to show the server cards as off.
       ...(readSession(req) && integrations.publicConfig() ? { integrations: integrations.publicConfig() } : {}),
+      ...(RPG && readSession(req) ? { rpg: { on: true } } : {}), // rpg fork hook
       // Trainers and studios (docs/TRAINERS.md): only to a session and only when on, so the app
       // shows no trace of the feature anywhere else.
       // `roles` decides whether the app shows the trainer dashboard; every route checks again anyway.
@@ -3624,6 +3632,10 @@ const routes = {
   /* ---------- the community library ---------- */
   // library/routes.js and library/moderation.js; with LIBRARY off they answer 404 'sharing-off'.
   ...library.routes,
+
+  /* ---------- RPG friends (fork) ---------- */
+  // rpg/routes.js; with RPG off they answer 404 'rpg-off' (the status route always answers).
+  ...rpgRoutes({ json, readBody, readSession, dataDir: DATA, origin: ORIGIN, enabled: RPG, allowLan: RPG_ALLOW_LAN, nameOf: id => db.users.find(u => u.id === id)?.name || '' }),
 
   /* ---------- photos & videos ---------- */
   // Absent, not refusing, when MEDIA_UPLOADS=0: a 404 is what a server from before the feature

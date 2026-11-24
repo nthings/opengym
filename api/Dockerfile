@@ -59,6 +59,8 @@ COPY library ./library
 COPY oidc ./oidc
 COPY integrations ./integrations
 COPY trainers ./trainers
+# rpg fork hook
+COPY rpg ./rpg
 COPY sources ./sources
 ENV NODE_ENV=production
 ENV PORT=3000

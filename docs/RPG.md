@@ -59,10 +59,24 @@ profile, in `localStorage` (`opengym-rpg-level:<id>`), so a level-up is announce
   even an empty one. The module does not edit core code to change that.
 - Imported history (Strong, Hevy) counts for the character in full.
 
+## Friends (stage A of the competition, server side)
+
+Off unless the server runs with `RPG=on` (and `RPG_ALLOW_LAN=1` to reach friends on a home network,
+for tests). Then each profile gets an Ed25519 key pair, a friends list and one-time invite links
+(48 hours), kept in `DATA_DIR/rpg/<userId>.json` (mode 600). Friends swap public keys through the
+link: `POST /api/rpg/invite`, `POST /api/rpg/add` (this server calls the other one's
+`POST /api/rpg/accept`), `GET /api/rpg/friends`, `POST /api/rpg/remove`. Nothing about training
+moves yet: the signed log, the ranking and the flags are stages B and C
+(`docs/superpowers/specs/2026-11-23-rpg-friends-design.md`).
+
+Core hooks for it: `api/server.js` (import, `RPG` flags, the route spread, `rpg` in `/api/config`,
+deleting a profile's file), `api/Dockerfile` (`COPY rpg`), `api/openapi.yaml` and
+`scripts/build-api-docs.mjs` (docs), `api/test/openapi-routes.test.js` (route list), and the
+regenerated `website/api.html`. Find them with `grep -rn "rpg fork hook" api scripts`.
+
 ## Not built yet
 
-Competing with friends (server to server, signed hash-chained workout summaries, each server
-recomputing the XP) is phase 2 and is not part of this module yet.
+The signed workout log, the weekly ranking and the flags (stages B and C) are not built yet.
 
 ## Android APK
 

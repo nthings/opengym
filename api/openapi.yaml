@@ -215,6 +215,11 @@ tags:
       Settings → Integrations: outbound webhooks now, more providers later. Off unless the
       server runs with `INTEGRATIONS` (e.g. `INTEGRATIONS=webhook`); then a profile can add
       its own connections. Secrets are sealed at rest and shown once. See docs/INTEGRATIONS.md.
+  - name: rpg
+    description: >-
+      The RPG friends list (fork). Off unless the server runs with `RPG=on`: then every route but
+      `/api/rpg/status` answers 404 `rpg-off`. Friends swap Ed25519 public keys through a one-time
+      invite link (48 hours, single use). See docs/RPG.md.
 
 security:
   - cookieAuth: []
@@ -3238,6 +3243,159 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Ok' }
         '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /api/rpg/status:
+    get:
+      tags: [rpg]
+      operationId: rpgStatus
+      summary: Whether the RPG friends feature is on
+      security: []
+      responses:
+        '200':
+          description: The flag.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  on: { type: boolean }
+
+  /api/rpg/friends:
+    get:
+      tags: [rpg]
+      operationId: rpgFriends
+      summary: Your public key, your friends and how many invites are open
+      responses:
+        '200':
+          description: The friends list. Never carries a private key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  publicKey: { type: string, description: Ed25519, 32 bytes base64url. }
+                  friends:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string }
+                        name: { type: string }
+                        serverUrl: { type: string }
+                        publicKey: { type: string }
+                        since: { type: integer, description: Epoch ms. }
+                  invites: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { description: 'The feature is off (code rpg-off).' }
+
+  /api/rpg/invite:
+    post:
+      tags: [rpg]
+      operationId: rpgInvite
+      summary: Make a one-time invite link (valid 48 hours)
+      responses:
+        '200':
+          description: The link to give a friend.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  link: { type: string, example: 'https://gym.example.com/#/rpg/invite/…' }
+                  expiresAt: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { description: 'The feature is off (code rpg-off).' }
+
+  /api/rpg/add:
+    post:
+      tags: [rpg]
+      operationId: rpgAdd
+      summary: Add a friend from their invite link
+      description: |
+        This server calls the other one's `accept` route with its public key, and stores the key it
+        gets back. Errors carry a `code`: `bad-link`, `bad-address`, `self`, `invite-invalid`,
+        `unreachable`, `friend-rpg-off`, `refused`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [link]
+              properties:
+                link: { type: string }
+      responses:
+        '200':
+          description: The new friend.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  friend: { type: object }
+        '400': { description: 'bad-link, bad-address, self or invite-invalid.' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { description: 'The feature is off (code rpg-off).' }
+        '502': { description: 'unreachable, friend-rpg-off or refused.' }
+
+  /api/rpg/accept:
+    post:
+      tags: [rpg]
+      operationId: rpgAccept
+      summary: Another server accepts an invite (server to server, no session)
+      description: |
+        Guarded by the one-time token and a rate limit (30 a minute for the server). A wrong, used or
+        expired token all answer `invite-invalid`.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, publicKey, serverUrl]
+              properties:
+                token: { type: string }
+                publicKey: { type: string }
+                serverUrl: { type: string }
+                name: { type: string }
+      responses:
+        '200':
+          description: This profile's public key, name and server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  publicKey: { type: string }
+                  name: { type: string }
+                  serverUrl: { type: string }
+        '400': { description: 'bad-request, self or invite-invalid.' }
+        '404': { description: 'The feature is off (code rpg-off).' }
+        '429': { description: Too many attempts. }
+
+  /api/rpg/remove:
+    post:
+      tags: [rpg]
+      operationId: rpgRemove
+      summary: Remove a friend
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id: { type: string }
+      responses:
+        '200':
+          description: Removed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Ok' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { description: 'No such friend, or the feature is off.' }
 
   /api/integrations:
     get:
