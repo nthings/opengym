@@ -5897,11 +5897,6 @@ export default {
   "History does not add up": "تاریخچه نمی‌خواند",
   "Could not update": "به‌روزرسانی نشد",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "۷ روز گذشته حساب می‌شود. تمرین‌هایی که دیر ثبت یا بعداً ویرایش شده‌اند حساب نمی‌شوند.",
-  "Flag": "علامت‌گذاری",
-  "Unflag": "حذف علامت",
-  "Too many flagged workouts": "تمرین‌های علامت‌خورده زیاد است",
-  "{0} flagged workout": "{0} تمرین علامت‌خورده",
-  "{0} flagged workouts": "{0} تمرین علامت‌خورده",
   "No workouts this week.": "این هفته تمرینی نیست.",
   "Edited afterwards": "بعداً ویرایش شده",
 }

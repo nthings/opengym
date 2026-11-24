@@ -5931,11 +5931,6 @@ export default {
   "History does not add up": "इतिहास मेल नहीं खाता",
   "Could not update": "अपडेट नहीं हो सका",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "पिछले 7 दिन गिने जाते हैं। देर से दर्ज या बाद में बदले गए वर्कआउट नहीं गिने जाते।",
-  "Flag": "चिह्नित करें",
-  "Unflag": "चिह्न हटाएँ",
-  "Too many flagged workouts": "बहुत अधिक चिह्नित वर्कआउट",
-  "{0} flagged workout": "{0} चिह्नित वर्कआउट",
-  "{0} flagged workouts": "{0} चिह्नित वर्कआउट",
   "No workouts this week.": "इस हफ़्ते कोई वर्कआउट नहीं।",
   "Edited afterwards": "बाद में बदला गया",
 }

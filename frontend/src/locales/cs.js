@@ -5897,11 +5897,6 @@ export default {
   "History does not add up": "Historie nesedí",
   "Could not update": "Nepodařilo se aktualizovat",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Počítá se posledních 7 dní. Tréninky zapsané pozdě nebo později upravené se nepočítají.",
-  "Flag": "Označit",
-  "Unflag": "Zrušit označení",
-  "Too many flagged workouts": "Příliš mnoho označených tréninků",
-  "{0} flagged workout": "{0} označený trénink",
-  "{0} flagged workouts": "{0} označených tréninků",
   "No workouts this week.": "Tento týden žádné tréninky.",
   "Edited afterwards": "Upraveno dodatečně",
 }

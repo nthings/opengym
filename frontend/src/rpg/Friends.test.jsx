@@ -25,11 +25,6 @@ const answer = (path, opts) => {
     if (mocks.addError) return Promise.reject(Object.assign(new Error('server words'), { status: 400, data: { code: mocks.addError } }))
     friends.push(ana); return Promise.resolve({ friend: ana })
   }
-  if (path === '/api/rpg/flag') {
-    const b = JSON.parse(opts.body)
-    mocks.flags = b.on === false ? mocks.flags.filter(x => x !== b.wid) : [...new Set([...mocks.flags, b.wid])]
-    return Promise.resolve({ flags: mocks.flags })
-  }
   if (path === '/api/rpg/remove') { friends = friends.filter(f => f.id !== JSON.parse(opts.body).id); return Promise.resolve({ ok: true }) }
   return Promise.reject(new Error('unexpected ' + path))
 }
@@ -58,7 +53,7 @@ const type = (input, v) => act(() => {
 
 const wk = (id, d, w) => ({ wid: id, flag: '', workout: { id, d, name: 'x', entries: [{ id: '0025', sets: [{ w, r: 10, done: true }] }], prs: [] } })
 const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') }
-beforeEach(() => { mocks.board = { me: { name: 'Me', workouts: [] }, friends: [] }; friends = []; mocks.on = true; mocks.addError = null; mocks.flags = []; mocks.api.mockReset(); mocks.api.mockImplementation(answer); mocks.copy.mockClear() })
+beforeEach(() => { mocks.board = { me: { name: 'Me', workouts: [] }, friends: [] }; friends = []; mocks.on = true; mocks.addError = null; mocks.api.mockReset(); mocks.api.mockImplementation(answer); mocks.copy.mockClear() })
 afterEach(() => { act(() => root.unmount()); host.remove(); if (sheetRoot) act(() => sheetRoot.unmount()); if (sheetHost) sheetHost.remove(); sheetRoot = null; sheetHost = null })
 
 describe('Friends', () => {
@@ -165,41 +160,18 @@ describe('Friends', () => {
     expect(host.querySelector('.rpg-rank')).toBeFalsy()
   })
 
-  it('opens a friend week with their sets, and flags a doubtful workout', async () => {
+  it('opens a friend week with their sets, read only', async () => {
     friends = [ana]
     mocks.board = {
       me: { name: 'Me', workouts: [] },
-      friends: [{ ...ana, flags: [], error: null, broken: null, unit: 'kg', workouts: [wk('a', today(), 100)] }],
+      friends: [{ ...ana, error: null, broken: null, unit: 'kg', workouts: [wk('a', today(), 100)] }],
     }
     await mount()
     await act(async () => { host.querySelector('.rpg-rank').click() })
     await openSheet()
     expect(sheetHost.textContent).toContain('Ana')
     expect(sheetHost.textContent).toContain('100 × 10')
-    await act(async () => { sheetBtn('Flag').click() })
-    await flush()
-    const call = mocks.api.mock.calls.find(c => c[0] === '/api/rpg/flag')
-    expect(JSON.parse(call[1].body)).toEqual({ id: 'f1', wid: 'a', on: true })
-    expect(sheetBtn('Unflag')).toBeTruthy()
-    await act(async () => { sheetBtn('Unflag').click() })
-    await flush()
-    expect(JSON.parse(mocks.api.mock.calls.filter(c => c[0] === '/api/rpg/flag').at(-1)[1].body)).toEqual({ id: 'f1', wid: 'a', on: false })
-    expect(sheetBtn('Flag')).toBeTruthy()
-  })
-
-  it('counts my flags, and three of them leave the friend unranked', async () => {
-    friends = [ana]
-    const three = ['a', 'b', 'c'].map((id, i) => wk(id, today(), 100 + i))
-    mocks.board = { me: { name: 'Me', workouts: [] }, friends: [{ ...ana, flags: ['a'], error: null, broken: null, workouts: three }] }
-    await mount()
-    let row = host.querySelector('.rpg-rank')
-    expect(row.textContent).toContain('1 flagged workout')
-    expect(row.textContent).toContain('70 XP') // 50 for the day plus the two left: 10 + 10
-    act(() => root.unmount()); host.remove()
-    mocks.board = { me: { name: 'Me', workouts: [] }, friends: [{ ...ana, flags: ['a', 'b', 'c'], error: null, broken: null, workouts: three }] }
-    await mount()
-    row = [...host.querySelectorAll('.rpg-rank')].find(r => r.textContent.includes('Ana'))
-    expect(row.textContent).toContain('Too many flagged workouts')
-    expect(row.textContent).not.toContain('XP')
+    // Nothing to tap but the close button: a flag would be a way to pick on a friend.
+    expect(sheetBtn('Flag')).toBeFalsy()
   })
 })

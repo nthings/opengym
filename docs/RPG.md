@@ -42,7 +42,7 @@ grep -rn "rpg fork hook" frontend/src
 | `lib/modules-copy.js` | its title and description |
 | `App.jsx` | lazy imports and the `/rpg`, `/rpg/badges` and `/rpg/friends` routes |
 | `components/TabBar.jsx` | the RPG tab, and the call to `useLevelUp` (the "Level up!" toast, a no-op with the module off) |
-| `locales/*.js` | 40 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 11 overrides) |
+| `locales/*.js` | 35 keys appended at the end of each pack, under `rpg fork` (`pt-BR.js` has 6 overrides) |
 | tests | `components/TabBar.test.jsx` (RPG tab cases), `modules.test.js`, `views/Modules.test.jsx` (RPG off by default), `lib/pt-br-locale.test.js` (inheritance fingerprint) |
 
 If upstream adds a locale key at the end of a pack, the conflict is just two appended blocks: keep both.
@@ -94,19 +94,20 @@ A friend whose chain or signatures do not verify is `broken` for good (a restore
 same: remove them and invite again) and is not ranked. The app computes the XP with the same
 `rpgState` as the sheet (`rpg/board.js`) and ranks XP of the last 7 days, then streak.
 
-Tapping a friend opens their week: every workout they logged, exercise by exercise, with its sets
-and records. Over the week, the numbers are converted to kilos (a profile in pounds does not earn 2.2x
-the XP for the same work). `Flag` marks a workout as doubtful: it stays on their server, stops counting
-for **me** only, and the friend's row says `1 flagged workout`. Three flagged workouts in the week and
-that friend is listed last without a place; an `edited` workout carries a note until they log a fresh
-one (there is no accept flow).
+Tapping a friend opens their week: every workout they logged, exercise by exercise, with its sets and
+records, read only. Weights are converted to kilos, so a profile in pounds does not earn 2.2x the XP
+for the same work. An `edited` workout carries a note and does not count (there is no accept flow).
 
-Not yet (stage C leftovers): a friend's notifications, undoing a flag from their side, key rotation.
+Flagging a friend's workout as doubtful was built and **dropped**: a flag is only one tap and there is
+no reply, so it turns into a way to pick on a friend. Reviewing their week is the deterrent; it needs no
+button.
+
+Not built: key rotation (revoke and re-invite instead), a friend's notifications.
 
 ## Not built yet
 
-Nothing of the planned stages. Left for later: key rotation (revoke and re-invite instead), a
-friend's side of a flag (they never hear about it), and letting a friend accept an `edited` workout.
+Nothing of the planned stages. Left for later: key rotation, and letting a friend accept an `edited`
+workout.
 
 ## Android APK
 

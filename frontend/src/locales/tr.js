@@ -5931,11 +5931,6 @@ export default {
   "History does not add up": "Geçmiş tutarsız",
   "Could not update": "Güncellenemedi",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Son 7 gün sayılır. Geç kaydedilen veya sonradan düzenlenen antrenmanlar sayılmaz.",
-  "Flag": "İşaretle",
-  "Unflag": "İşareti kaldır",
-  "Too many flagged workouts": "Çok fazla işaretli antrenman",
-  "{0} flagged workout": "{0} işaretli antrenman",
-  "{0} flagged workouts": "{0} işaretli antrenman",
   "No workouts this week.": "Bu hafta antrenman yok.",
   "Edited afterwards": "Sonradan düzenlendi",
 }

@@ -31,7 +31,7 @@ export const friendIdOf = publicKey => crypto.createHash('sha256').update(String
 /** Adds a friend, or refreshes name and address of one with the same public key (`since` stays). */
 export function addFriend(doc, { name, serverUrl, publicKey }, now = Date.now()) {
   const id = friendIdOf(publicKey);
-  const clean = { id, name: String(name || '').trim().slice(0, NAME_MAX), serverUrl: String(serverUrl), publicKey, since: now, flags: [] };
+  const clean = { id, name: String(name || '').trim().slice(0, NAME_MAX), serverUrl: String(serverUrl), publicKey, since: now };
   const at = doc.friends.findIndex(f => f.id === id);
   if (at >= 0) doc.friends[at] = { ...clean, since: doc.friends[at].since };
   else doc.friends.push(clean);

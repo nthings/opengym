@@ -5927,11 +5927,6 @@ export default {
   "History does not add up": "Istorija nesutampa",
   "Could not update": "Nepavyko atnaujinti",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Skaičiuojamos paskutinės 7 dienos. Vėlai įrašytos ar vėliau pakeistos treniruotės neįskaičiuojamos.",
-  "Flag": "Pažymėti",
-  "Unflag": "Nuimti žymą",
-  "Too many flagged workouts": "Per daug pažymėtų treniruočių",
-  "{0} flagged workout": "{0} pažymėta treniruotė",
-  "{0} flagged workouts": { one: '{0} pažymėta treniruotė', few: '{0} pažymėtos treniruotės', many: '{0} pažymėtos treniruotės', other: '{0} pažymėtų treniruočių' },
   "No workouts this week.": "Šią savaitę treniruočių nėra.",
   "Edited afterwards": "Pakeista vėliau",
 }

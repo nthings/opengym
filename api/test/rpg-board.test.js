@@ -179,37 +179,6 @@ test('a profile that never opened the feature has no log, and off answers rpg-of
   assert.doesNotThrow(() => off.onStateWrite('u1', { workouts: [] }));
 });
 
-test('flagging a friend workout keeps it on their server and out of my ranking', async () => {
-  const a = makeNode('Ana', A), b = makeNode('Beto', B);
-  await befriend(a, b);
-  a.save('u1', [wk('w1', '2026-11-23'), wk('w2', '2026-11-22')]);
-  const f = (await board(b)).friends[0];
-  const flag = async (body) => (await b.call('POST /api/rpg/flag', body)).code;
-  assert.equal(await flag({ id: f.id, wid: 'w1' }), 200);
-  const after = (await board(b)).friends[0];
-  assert.deepEqual(after.flags, ['w1']);
-  assert.equal(after.workouts.length, 2); // shown, so it can be reviewed and unflagged
-  assert.equal(await flag({ id: f.id, wid: 'w1', on: false }), 200);
-  assert.deepEqual((await board(b)).friends[0].flags, []);
-  assert.equal(await flag({ id: f.id, wid: 'nope' }), 404);
-  assert.equal(await flag({ id: 'nobody', wid: 'w1' }), 404);
-});
-
-test('a flag dies with the workout it was about, and with the friend', async () => {
-  const a = makeNode('Ana', A), b = makeNode('Beto', B);
-  await befriend(a, b);
-  a.save('u1', [wk('w1', '2026-11-23'), wk('w2', '2026-11-23')]);
-  const f = (await board(b)).friends[0];
-  await b.call('POST /api/rpg/flag', { id: f.id, wid: 'w1' });
-  a.save('u1', [wk('w2', '2026-11-23')]); // w1 removed on Ana's side
-  b.clock.now += 60000; a.clock.now += 60000;
-  assert.deepEqual((await board(b)).friends[0].flags, []);
-  await b.call('POST /api/rpg/flag', { id: f.id, wid: 'w2' });
-  await b.call('POST /api/rpg/remove', { id: f.id });
-  await befriend(a, b);
-  assert.deepEqual((await board(b)).friends[0].flags, []);
-});
-
 test('the feed says which unit the weights are in', async () => {
   const a = makeNode('Ana', A), b = makeNode('Beto', B);
   await befriend(a, b);

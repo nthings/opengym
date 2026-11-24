@@ -5928,11 +5928,6 @@ export default {
   "History does not add up": "Історія не сходиться",
   "Could not update": "Не вдалося оновити",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Враховуються останні 7 днів. Тренування, внесені із запізненням або змінені пізніше, не зараховуються.",
-  "Flag": "Позначити",
-  "Unflag": "Зняти позначку",
-  "Too many flagged workouts": "Забагато позначених тренувань",
-  "{0} flagged workout": "{0} позначене тренування",
-  "{0} flagged workouts": { one: '{0} позначене тренування', few: '{0} позначені тренування', many: '{0} позначених тренувань' },
   "No workouts this week.": "Цього тижня тренувань немає.",
   "Edited afterwards": "Змінено пізніше",
 }

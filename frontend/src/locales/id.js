@@ -5896,11 +5896,6 @@ export default {
   "History does not add up": "Riwayat tidak cocok",
   "Could not update": "Tidak bisa diperbarui",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Menghitung 7 hari terakhir. Latihan yang dicatat terlambat atau diubah setelahnya tidak dihitung.",
-  "Flag": "Tandai",
-  "Unflag": "Hapus tanda",
-  "Too many flagged workouts": "Terlalu banyak latihan ditandai",
-  "{0} flagged workout": "{0} latihan ditandai",
-  "{0} flagged workouts": "{0} latihan ditandai",
   "No workouts this week.": "Tidak ada latihan minggu ini.",
   "Edited afterwards": "Diedit setelahnya",
 };

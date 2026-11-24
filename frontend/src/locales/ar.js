@@ -5986,11 +5986,6 @@ export default {
   "History does not add up": "السجل غير متطابق",
   "Could not update": "تعذّر التحديث",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "يحسب آخر 7 أيام. التمارين المسجّلة متأخرًا أو المعدّلة لاحقًا لا تُحتسب.",
-  "Flag": "وضع علامة",
-  "Unflag": "إزالة العلامة",
-  "Too many flagged workouts": "تمارين موسومة كثيرة",
-  "{0} flagged workout": "تمرين موسوم {0}",
-  "{0} flagged workouts": "{0} تمارين موسومة",
   "No workouts this week.": "لا توجد تمارين هذا الأسبوع.",
   "Edited afterwards": "عُدّل لاحقًا",
 }

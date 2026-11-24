@@ -5871,11 +5871,6 @@ export default {
   "History does not add up": "Historikken stemmer ikke",
   "Could not update": "Kunne ikke opdatere",
   "Counts the last 7 days. Workouts logged late or edited afterwards do not count.": "Tæller de seneste 7 dage. Træninger, der er logget for sent eller ændret bagefter, tæller ikke.",
-  "Flag": "Markér",
-  "Unflag": "Fjern markering",
-  "Too many flagged workouts": "For mange markerede træninger",
-  "{0} flagged workout": "{0} markeret træning",
-  "{0} flagged workouts": "{0} markerede træninger",
   "No workouts this week.": "Ingen træninger i denne uge.",
   "Edited afterwards": "Ændret bagefter",
 }

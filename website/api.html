@@ -332,7 +332,7 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
   <p class="api-facts">
     <span>OpenAPI 3.1.0</span>
     <span>openGym v1.4.5</span>
-    <span>186 endpoints</span>
+    <span>185 endpoints</span>
     <span>AGPL-3.0-or-later</span>
   </p>
 
@@ -3753,52 +3753,6 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
   </div>
 </details>
 
-<details class="ep" id="op-rpgFlag">
-  <summary>
-    <span class="m post">POST</span>
-    <span class="ep-path"><code>/api/rpg/flag</code></span>
-    <span class="ep-chev" aria-hidden="true"></span>
-    <span class="ep-sum">Flag a friend's workout as doubtful, or take the flag back</span>
-  </summary>
-  <div class="ep-body">
-<p>A flag is mine alone: the workout stops counting in my ranking and stays on their server, never sent to them. Their workout is still returned by the board so it can be reviewed and unflagged. Flagging three or more of a friend's workouts in the week leaves them unranked.</p>
-    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Requires a session: the cookie set at sign-in, or <code>Authorization: Bearer &lt;token&gt;</code> from mobile-app pairing.</span></p>
-
-<p class="ep-h">Request body <span class="p-hint">(JSON)</span></p><div class="ptab">
-  <div class="prow">
-    <span class="p-name">id<em class="p-req" title="required">required</em></span>
-    <span class="p-type">string</span>
-    <span class="p-desc">The friend's id.</span>
-  </div>
-  <div class="prow">
-    <span class="p-name">wid<em class="p-req" title="required">required</em></span>
-    <span class="p-type">string</span>
-    <span class="p-desc">The workout's id</span>
-  </div>
-  <div class="prow">
-    <span class="p-name">on</span>
-    <span class="p-type">boolean <span class="p-hint">(default true)</span></span>
-    <span class="p-desc">False takes the flag back.</span>
-  </div>
-</div>
-    <p class="ep-h">Responses</p>
-    <div class="ptab">
-  <div class="prow rrow">
-    <span class="r-code s2">200</span>
-    <span class="p-desc">The flags left on that friend.<span class="r-sig">{ flags: string[] }</span></span>
-  </div>
-  <div class="prow rrow">
-    <span class="r-code s4">401</span>
-    <span class="p-desc">No session, expired/revoked session, or a disabled account.<span class="r-sig"><code>{&quot;error&quot;:&quot;not signed in&quot;}</code></span></span>
-  </div>
-  <div class="prow rrow">
-    <span class="r-code s4">404</span>
-    <span class="p-desc">not-friends, no-workout, or the feature is off (rpg-off).</span>
-  </div>
-    </div>
-  </div>
-</details>
-
 <details class="ep" id="op-rpgBoard">
   <summary>
     <span class="m get">GET</span>
@@ -3807,7 +3761,7 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
     <span class="ep-sum">My workouts and my friends' workouts, fetched and verified, for the weekly ranking</span>
   </summary>
   <div class="ep-body">
-<p>Fetches each friend's feed (at most every 30 seconds), checks the chain and signatures and answers the workouts of the last 120 days with their <code>flag</code> (<code>''</code> counts; <code>late</code>, <code>future</code> and <code>edited</code> do not). A friend whose history does not add up is <code>broken</code> for good; one that cannot be reached or no longer lists this profile has an <code>error</code> (<code>unreachable</code>, <code>not-friends</code>, <code>refused</code>). <code>flags</code> are the workouts I marked doubtful (they stop counting for me) and <code>unit</code> is the friend's own weight unit (<code>kg</code> or <code>lb</code>), so the app can compare fairly. The app turns the workouts into XP.</p>
+<p>Fetches each friend's feed (at most every 30 seconds), checks the chain and signatures and answers the workouts of the last 120 days with their <code>flag</code> (<code>''</code> counts; <code>late</code>, <code>future</code> and <code>edited</code> do not). A friend whose history does not add up is <code>broken</code> for good; one that cannot be reached or no longer lists this profile has an <code>error</code> (<code>unreachable</code>, <code>not-friends</code>, <code>refused</code>). <code>unit</code> is the friend's own weight unit (<code>kg</code> or <code>lb</code>), so the app can compare fairly. The app turns the workouts into XP.</p>
     <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Requires a session: the cookie set at sign-in, or <code>Authorization: Bearer &lt;token&gt;</code> from mobile-app pairing.</span></p>
 
 
