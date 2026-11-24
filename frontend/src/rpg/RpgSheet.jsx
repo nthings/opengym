@@ -68,6 +68,7 @@ export default function RpgSheet() {
         value={sheet.badges.filter(b => b.earned).length + ' / ' + sheet.badges.length}
         subtitle={sheet.nextBadge ? t('Next badge') + ': ' + badges[sheet.nextBadge.id] + ' (' + sheet.nextBadge.have + ' / ' + sheet.nextBadge.need + ')' : null}
         onClick={() => nav('/rpg/badges')} />
+      <Row className="rpg-friends-link" icon="person" iconTint="var(--teal)" title={t('Friends')} accessory="chevron" onClick={() => nav('/rpg/friends')} />
     </Section>
   </div>
 }

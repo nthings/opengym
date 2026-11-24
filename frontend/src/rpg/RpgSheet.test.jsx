@@ -83,4 +83,9 @@ describe('RpgSheet', () => {
     expect(next).toContain('10 workouts')
     expect(next).toContain('1 / 10')
   })
+
+  it('links to the friends screen', () => {
+    mount({ workouts: [] })
+    expect(container.querySelector('.rpg-friends-link').textContent).toContain('Friends')
+  })
 })

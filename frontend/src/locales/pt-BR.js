@@ -423,6 +423,11 @@ export const PT_BR_OVERRIDES = {
   // --- rpg fork: character sheet; the rest (Aprendiz, Guerreiro, Campeão, Lenda, Atributos, {0} XP...) is the same in pt-BR ---
   "Badges": "Medalhas",
   "Next badge": "Próxima medalha",
+  "Remove {0} from your friends?": "Remover {0} dos seus amigos?",
+  "Valid for 48 hours and works once. Your friend pastes it under Friends, Add a friend.": "Válido por 48 horas e só funciona uma vez. Seu amigo cola em Amigos, Adicionar um amigo.",
+  "Friends need a server with RPG switched on (RPG=on).": "Amigos precisam de um servidor com o RPG ativado (RPG=on).",
+  "Could not reach that server.": "Não foi possível conectar a esse servidor.",
+  "No friends yet.": "Você ainda não tem amigos.",
   "Level up! You are now level {0}.": "Subiu de nível! Agora você é nível {0}.",
   "Turn your training into a character: level, XP, attributes and titles.": "Transforme seu treino em um personagem: nível, XP, atributos e títulos.",
   "Bodyweight moves from easier to harder. Own every set at the top of the range and the next rung is yours.": "Exercícios com o peso do corpo, do mais fácil ao mais difícil. Domine cada série no topo da faixa e o próximo degrau é seu.",
